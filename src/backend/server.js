@@ -57,6 +57,11 @@ app.post('/login/:email',function(req,res){
     };
 
     mailgun.messages().send(data, function (error, body) {
+        if (error) {
+            reject([{ messages: [{ id: 'Auth.form.error.email.invalid' }] }]);
+        } else {
+            resolve();
+        }
         console.log("Body: "+body);
         if(error) console.log("Error: "+error)
     });
