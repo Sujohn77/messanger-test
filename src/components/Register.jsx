@@ -8,7 +8,7 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { Formik, Form, ErrorMessage } from 'formik';
+import { Formik, Form, ErrorMessage, Field} from 'formik';
 
 
 
@@ -36,6 +36,23 @@ const useStyles = makeStyles(theme => ({
     },
     h1:{
        textAlign:"center"
+    },
+    input:{
+        padding: "18.5px 1px ",
+        color: "currentColor",
+        width: "100%",
+        border: "0",
+        height: "1.1875em",
+        margin: "0",
+        minWidth: "0",
+        background: "none",
+        boxSizing: "content-box",
+        animationName: "MuiInputBase-keyframes-auto-fill-cancel",
+        webkitTapHighlightColor: "transparent",
+        display:"flex",
+
+        textAlign:"center",
+        justifyContent:"center"
     }
 }));
 
@@ -73,6 +90,8 @@ export const SignIn = ({sendEmailMessage}) =>{
                     {({ isSubmitting }) => (
                         <Form>
                             <TextField
+                                className={classes.input}
+                                type="email"
                                 variant="outlined"
                                 margin="normal"
                                 required
@@ -95,7 +114,6 @@ export const SignIn = ({sendEmailMessage}) =>{
                             >
                                 Sign In
                             </Button>
-
                             <Grid container>
                                 <Grid item xs>
                                     <Link href="#" variant="body2">
@@ -111,6 +129,38 @@ export const SignIn = ({sendEmailMessage}) =>{
                         </Form>
                     )}
                 </Formik>
+                {/*<Formik*/}
+                {/*    initialValues={{ email: '', password: '' }}*/}
+                {/*    validate={values => {*/}
+                {/*        const errors = {};*/}
+                {/*        if (!values.email) {*/}
+                {/*            errors.email = 'Required';*/}
+                {/*        } else if (*/}
+                {/*            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)*/}
+                {/*        ) {*/}
+                {/*            errors.email = 'Invalid email address';*/}
+                {/*        }*/}
+                {/*        return errors;*/}
+                {/*    }}*/}
+                {/*    onSubmit={(values, { setSubmitting }) => {*/}
+                {/*        setTimeout(() => {*/}
+                {/*            alert(JSON.stringify(values, null, 2));*/}
+                {/*            setSubmitting(false);*/}
+                {/*        }, 400);*/}
+                {/*    }}*/}
+                {/*>*/}
+                {/*    {({ isSubmitting }) => (*/}
+                {/*        <Form>*/}
+                {/*            <Field type="email" name="email" />*/}
+                {/*            <ErrorMessage name="email" component="div" />*/}
+                {/*            <Field type="password" name="password" />*/}
+                {/*            <ErrorMessage name="password" component="div" />*/}
+                {/*            <button type="submit" disabled={isSubmitting}>*/}
+                {/*                Submit*/}
+                {/*            </button>*/}
+                {/*        </Form>*/}
+                {/*    )}*/}
+                {/*</Formik>*/}
             </div>
             <Box mt={8}>
 
