@@ -1,26 +1,22 @@
 // LIBRARIES
 import React, {Component} from 'react'
-import { Route , BrowserRouter as Router} from 'react-router-dom';
-import { connect } from "react-redux"
-
-import {LoginLayout} from "./Layouts/LoginLoyout.jsx";
+import { Route , BrowserRouter as Router, Redirect,Switch} from 'react-router-dom';
+// COMPONENTS
+import {GuestLayout} from "./Layouts/GuestLayout.jsx";
 import {ProfileContainer} from "./containers/ProfileContainer.jsx";
-import {setInitialize} from "./redux/app-reducer.jsx";
+import UserForm from "./components/UserForm.jsx";
 
-// COMPONENT
-class App extends Component {
+
+export default class App extends Component {
     render() {
         return (
             <Router>
-                <Route exact path="/" render={() => <LoginLayout/>}/>
-                <Route path="/login" render={() => <LoginLayout/>}/>
-                <Route path="/profile/:userId?" render={() => <ProfileContainer/>}/>
+                <Switch>
+                    <Route path="/login" render={() => <GuestLayout/>}/>
+                    <Route path="/register" render={() => <GuestLayout children={<UserForm/>}/>}/>
+                    <Route path="/profile" render={() => <ProfileContainer/>}/>
+                    <Route render={() => <Redirect to="/login"/>}/>
+                </Switch>
             </Router>)
     }
 }
-let mapStateToProps = (state) =>{
-    return{
-        initialized:state.app.initialized
-    }
-};
-export default App =  connect(mapStateToProps,{setInitialize})(App)
