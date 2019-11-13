@@ -7,8 +7,8 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { Formik, Form, ErrorMessage} from 'formik';
-import { withFetchData } from "./../hoc/withFetchData.jsx";
+
+// import withAuthRedirect from "../hoc/withAuthRedirect.jsx";
 
 const useStyles = makeStyles(theme => ({
     '@global': {
@@ -19,24 +19,26 @@ const useStyles = makeStyles(theme => ({
     paper: {
         marginTop: theme.spacing(-20),
         border: '1px solid #e6e6e6',
-        padding: '15px',
+        margin: '15px',
         background: '#fff',
         borderRadius: '4px',
         height:"300px",
         width:"364px",
-        flexDirection: 'column'
+        flexDirection: 'column',
+        overflow:"hidden"
     },
     container:{
         display: 'flex',
-        justifyContent:"center"
+        justifyContent:"center",
     },
     form: {
-        width: '100%', // Fix IE 11 issue.
+        width: '', // Fix IE 11 issue.
         marginTop: theme.spacing(1),
+        overflow: "hidden",
+        margin:"15px"
     },
     submit: {
         margin: theme.spacing(2, 0, 2),
-
     },
     h1:{
         textAlign:"center"
@@ -45,100 +47,71 @@ const useStyles = makeStyles(theme => ({
         width: "100%",
         animationName: "MuiInputBase-keyframes-auto-fill-cancel",
         webkitTapHighlightColor: "transparent",
-        display:"flex",
-        textAlign:"center",
-        justifyContent:"center"
     }
 }));
 
-let SignIn = ({sendEmailMessage}) =>{
+const SignIn = ({signIn}) =>{
     const classes = useStyles();
 
-    return (
-        <Container component="main" maxWidth="xs" className={classes.container}>
+
+    return <Container component="main" maxWidth="xs" className={classes.container}>
             <CssBaseline />
             <div className={classes.paper}>
-
                 <Typography component="h1" variant="h5" className={classes.h1}>
                     Login
                 </Typography>
-                <Formik
-                    initialValues={{ email: ''}}
-                    validate={values => {
-                        const errors = {};
-                        if (!values.email) {
-                            errors.email = 'Required';
-                        } else if (
-                            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-                        ) {
-                            errors.email = 'Invalid email address';
-                        }
-                        return errors;
-                    }}
-                    onSubmit={(values, { setSubmitting }) => {
-                        setTimeout(() => {
-                            alert(JSON.stringify(values, null, 2));
-                            setSubmitting(false);
-                        }, 400);
-                    }}>
-                    {({ isSubmitting }) => (
-                        <Form>
-                            <TextField
-                                className={classes.input}
-                                type="email"
-                                variant="outlined"
-                                margin="normal"
-                                required
-                                fullWidth
-                                id="email"
-                                label="Email Address"
-                                name="email"
-                                autoComplete="email"
-                                autoFocus
-                            />
-                            <ErrorMessage name="email" component="div" />
-                            <TextField
-                                className={classes.input}
-                                type="password"
-                                variant="outlined"
-                                margin="normal"
-                                required
-                                fullWidth
-                                id="password"
-                                label="Password"
-                                name="password"
-                                autoComplete="password"
-                                autoFocus
-                            />
-                            <ErrorMessage name="email" component="div" />
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                color="primary"
-                                className={classes.submit}
-                                disabled={isSubmitting}
-                                onClick={sendEmailMessage}>
-                                Sign In
-                            </Button>
-                            <Grid container>
-                                <Grid item xs>
-                                    <Link href="#" variant="body2">
-                                        Forgot password?
-                                    </Link>
+                <form onSubmit={signIn} className={classes.form}>
+                                <TextField
+                                    className={classes.input}
+                                    type="email"
+                                    variant="outlined"
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    id="email"
+                                    label="Email Address"
+                                    name="email"
+                                    autoComplete="email"
+                                    autoFocus
+                                />
+
+                                <TextField
+                                    className={classes.input}
+                                    type="password"
+                                    variant="outlined"
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    id="password"
+                                    label="Password"
+                                    name="password"
+                                    autoComplete="password"
+                                    autoFocus
+                                />
+
+                                <Button
+                                    type="submit"
+                                    fullWidth
+                                    variant="contained"
+                                    color="primary"
+                                    className={classes.submit}>
+                                    Sign In
+                                </Button>
+                                <Grid container>
+                                    <Grid item xs>
+                                        <Link href="#" variant="body2">
+                                            {/*Forgot password?*/}
+                                        </Link>
+                                    </Grid>
+                                    <Grid item>
+                                        <Link href="/register" variant="body2">
+                                            {"Don't have an account? Sign Up"}
+                                        </Link>
+                                    </Grid>
                                 </Grid>
-                                <Grid item>
-                                    <Link href="/register" variant="body2">
-                                        {"Don't have an account? Sign Up"}
-                                    </Link>
-                                </Grid>
-                            </Grid>
-                        </Form>
-                    )}
-                </Formik>
+                </form>
             </div>
         </Container>
-    );
 };
 
-export default SignIn = withFetchData(SignIn);
+export default SignIn;

@@ -1,24 +1,19 @@
 import React from 'react';
-import {SignIn} from "./../components/Login.jsx";
-
-export const LoginContainer = (props) => {
-    const sendEmailMessage = async (values) => {
-        debugger
-        try{
-            if(!values.email){
-                values.email = "stonebo0sh56@gmail.com"
-            }
-            let response = await fetch("http://localhost:3001/login/"+values.email,{method:'POST'});
-            if(!response.ok){
-                console.log("Error HTTP: "+ response.status);
-            }
-        }
-        catch (e) {
-            console.log("Error : "+ e.message);
-        }
+import Login from "../components/Login.jsx";
+import {connect} from 'react-redux';
+import {loginThunk} from "../redux/user-reducer";
+import * as axios from "axios";
+const RegisterContainer = (props) => {
+    const signIn = (values) => {
+        props.loginThunk(values)
     };
 
-    return <>
-        <SignIn {...props} sendEmailMessage={sendEmailMessage}/>
-    </>
+    const verifyCodeUser = async (code) =>{
+        let res = await fetch("http://localhost:3001/register/"+code,{method:"POST"});
+        return res.statusText;
+    };
+
+    return <Login {...props} verifyCodeUser={verifyCodeUser} signIn={signIn}/>
 };
+
+export default connect(null,{loginThunk})(RegisterContainer)

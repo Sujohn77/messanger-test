@@ -2,37 +2,50 @@ import {UserAPI} from "../api/register";
 import {stopSubmit} from "redux-form";
 
 
-const SET_USER_DATA = "SET_USER_DATA";
+const SIGN_UP = "SIGN_UP";
+const LOG_OUT = "LOG_OUT";
 
 let initialState = {
     data:{
         email:null,
+        password:null,
         firstName:null,
         lastName: null
-    }
+    },
+    Auth:true
 };
 
-export const appReducer = (state = initialState,action ) => {
+export const userReducer = (state = initialState,action ) => {
     switch(action.type){
-        case SET_USER_DATA:
+        case SIGN_UP:
             return {
                 ...state,
                 data: action.payload,
+                Auth: true
+            };
+        case LOG_OUT:
+            return {
+                ...state,
+                Auth: false
             };
         default: return state;
     }
 
 };
 
-const setUser = (email,firstName,lastName) =>({type: SET_USER_DATA,payload:{email,firstName,lastName}});
+const setUser = (email,firstName,lastName) =>({type: SIGN_UP,payload:{email,firstName,lastName}});
 
-export const setUserAPI = (data) => async (dispatch) => {
-    debugger
-    let response = await UserAPI.setUserData(data);
+export const setUserThunk = (data) => async (dispatch) => {
 
-    if(response.ok){
-        dispatch(setUser(data));
-    } else{
-        dispatch(stopSubmit("detail-form",{_error:"This email was already registered"}));
+    try{
+        debugger
+        const response = UserAPI.setUserData(data);
+
+        if(response.ok){
+            dispatch(setUser(response.data))
+        }
+    }
+    catch (e) {
+        console.log(e.message);
     }
 };

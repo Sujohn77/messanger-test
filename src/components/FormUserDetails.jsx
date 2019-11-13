@@ -9,6 +9,8 @@ import Button from "@material-ui/core/Button";
 import {reduxForm,Field} from "redux-form";
 import {required} from "../validators/required";
 import {maxLengthCreator} from "../validators/maxLengthCreator";
+import Link from "@material-ui/core/Link";
+import { Input } from "./../common/FormsControl.jsx";
 
 const useStyles = makeStyles(theme => ({
     form: {
@@ -23,6 +25,7 @@ const useStyles = makeStyles(theme => ({
         height:"250px",
         padding: '15px',
         background: '#fff',
+        overflow:"hidden",
         borderRadius: '4px',
         position:"relative",
     },
@@ -34,6 +37,7 @@ const useStyles = makeStyles(theme => ({
     },
     submit: {
         marginTop: "calc(100% - 265px)",
+        marginBottom: "10px"
     },
     input:{
         width:"100%"
@@ -42,16 +46,17 @@ const useStyles = makeStyles(theme => ({
 
 let maxLength30 = maxLengthCreator(30);
 
-let FormUserDetails = ({handleSubmit,captcha,signUp,...props}) => {
+let FormUserDetails = ({prevStep,handleSubmit,}) => {
     const classes = useStyles();
 
     return (<Container component="main" maxWidth="xs">
                 <FormControl className={classes.paper}>
-                    <form>
+                    <form onSubmit={handleSubmit}>
                         <InputLabel htmlFor="firstName" className={classes.label}>First Name</InputLabel>
-
                         <Field validate={[required,maxLength30]}
-                               component={"input"} name="firstName"
+                               id="firstName"
+                               component={Input}
+                               name="firstName"
                                className={classes.input}/>
 
                         <InputLabel htmlFor="lastName" className={classes.label}>Last Name (optional)</InputLabel>
@@ -59,24 +64,26 @@ let FormUserDetails = ({handleSubmit,captcha,signUp,...props}) => {
                         <Field validate={[required,maxLength30]}
                                id="lastName"
                                name="lastName"
-                               component={"input"}
+                               component={Input}
                                className={classes.input}/>
 
                         <Button type="submit"
-                                onClick={signUp}
                                 fullWidth
                                 variant="contained"
                                 color="primary"
                                 className={classes.submit}>
                             Sign Up
                         </Button>
+                        <Link href='#' onClick={prevStep}>
+                            {"Back to page with email"}
+                        </Link>
                     </form>
                 </FormControl>
             </Container>
     );
 };
  FormUserDetails =  reduxForm({
-    form: 'detail-form'
+    form: 'detailForm'
 })(FormUserDetails);
 
 export default FormUserDetails;

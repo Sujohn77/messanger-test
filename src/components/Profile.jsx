@@ -6,7 +6,9 @@ import Grid from '@material-ui/core/Grid';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchInput from "react-search-input";
+
 import "./../assets/search-input.css";
+import {withAuthRedirect} from "../hoc/withAuthRedirect.jsx";
 
 const useStyles = makeStyles(theme => ({
     main:{
@@ -25,7 +27,9 @@ const useStyles = makeStyles(theme => ({
     mainContent:{
         height:"calc(100vh - 50px)",
         border:"2px solid #fff",
-        borderTop: "none"
+        borderTop: "none",
+        display:"flex",
+
     },
     dialogs:{
         background:"#fff",
@@ -51,14 +55,23 @@ const useStyles = makeStyles(theme => ({
     },
     search:{
         marginBottom: "10px"
+    },
+    textarea: {
+        marginTop:"96%",
+        minWidth:"100%",
+        height:"50px",
+        border:"none"
     }
 }));
 
 
 export const Profile = (props) => {
     const classes = useStyles();
+
     const [open,setOpen] = useState(false);
+
     let loopOfNumbers = [1,2,3,4,5,6,7,8,9,10,11,12,13];
+
     return <div className={classes.main}>
         <Container  >
 
@@ -79,9 +92,9 @@ export const Profile = (props) => {
 
             </Container>
 
-            <Grid className={classes.mainContent}>
+            <Grid className={classes.mainContent} >
 
-                <Grid className={classes.dialogs} xs="3">
+                <Grid className={classes.dialogs} xs="3" item>
                     <SearchInput className={classes.search}  onChange={null} />
                 {
                     loopOfNumbers.map(() =>
@@ -96,7 +109,11 @@ export const Profile = (props) => {
                             </Grid>)
                 }
                 </Grid>
+                <Grid xs="9" item>
+                    <textarea name="" id="" cols="30" rows="10" className={classes.textarea}></textarea>
+                </Grid>
             </Grid>
         </Container>
     </div>
 };
+

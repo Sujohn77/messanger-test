@@ -1,170 +1,33 @@
-import React from 'react';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import { Formik, Form, ErrorMessage, Field} from 'formik';
+import React, { useState} from 'react';
+import FormUserDetails from './FormUserDetails.jsx';
+import FormUserEmail from './FormEmailPassword.jsx';
+import FormVerifyCode from "./FormVerifyCode.jsx";
 
 
+const Register = ({signUp,verifyCodeUser}) =>{
+  const [step,setStep] = useState(1);
 
-const useStyles = makeStyles(theme => ({
-    '@global': {
-        body: {
-            backgroundColor: theme.palette.common.white,
-        },
-    },
-    paper: {
-        marginTop: theme.spacing(-20),
-        display: 'flex',
-        border: '1px solid #e6e6e6',
-        padding: '15px',
-        background: '#fff',
-        borderRadius: '4px',
-        flexDirection: 'column'
-    },
-    form: {
-        width: '100%', // Fix IE 11 issue.
-        marginTop: theme.spacing(1),
-    },
-    submit: {
-        margin: theme.spacing(2, 0, 2),
-    },
-    h1:{
-       textAlign:"center"
-    },
-    input:{
-        padding: "18.5px 1px ",
-        color: "currentColor",
-        width: "100%",
-        border: "0",
-        height: "1.1875em",
-        margin: "0",
-        minWidth: "0",
-        background: "none",
-        boxSizing: "content-box",
-        animationName: "MuiInputBase-keyframes-auto-fill-cancel",
-        webkitTapHighlightColor: "transparent",
-        display:"flex",
 
-        textAlign:"center",
-        justifyContent:"center"
+  const handleSubmit = (values) => {
+    signUp(values);
+  };
+
+    switch (step) {
+      case 1:
+        return <FormUserEmail
+            nextStep={() => setStep(step + 1)}/>;
+      case 2:
+          return <FormVerifyCode
+              nextStep={() => setStep(step + 1)}
+              prevStep={() => setStep(step -1)}
+              verifyCode={verifyCodeUser}/> ;
+      case 3:
+        return  <FormUserDetails
+            prevStep={() => setStep(step -2)}
+            handleSubmit={handleSubmit}
+          />;
+      default:setStep(1);
     }
-}));
-
-export const SignIn = ({sendEmailMessage}) =>{
-    const classes = useStyles();
-
-    return (
-        <Container component="main" maxWidth="xs">
-            <CssBaseline />
-            <div className={classes.paper}>
-
-                <Typography component="h1" variant="h5" className={classes.h1}>
-                    Login
-                </Typography>
-                <Formik
-                    initialValues={{ email: ''}}
-                    validate={values => {
-                        const errors = {};
-                        if (!values.email) {
-                            errors.email = 'Required';
-                        } else if (
-                            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-                        ) {
-                            errors.email = 'Invalid email address';
-                        }
-                        return errors;
-                    }}
-                    onSubmit={(values, { setSubmitting }) => {
-                        setTimeout(() => {
-                            alert(JSON.stringify(values, null, 2));
-                            setSubmitting(false);
-                        }, 400);
-                    }}
-                >
-                    {({ isSubmitting }) => (
-                        <Form>
-                            <TextField
-                                className={classes.input}
-                                type="email"
-                                variant="outlined"
-                                margin="normal"
-                                required
-                                fullWidth
-                                id="email"
-                                label="Email Address"
-                                name="email"
-                                autoComplete="email"
-                                autoFocus
-                            />
-                            <ErrorMessage name="email" component="div" />
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                color="primary"
-                                className={classes.submit}
-                                disabled={isSubmitting}
-                                onClick={sendEmailMessage}
-                            >
-                                Sign In
-                            </Button>
-                            <Grid container>
-                                <Grid item xs>
-                                    <Link href="#" variant="body2">
-                                        Forgot password?
-                                    </Link>
-                                </Grid>
-                                <Grid item>
-                                    <Link href="#" variant="body2">
-                                        {"Don't have an account? Sign Up"}
-                                    </Link>
-                                </Grid>
-                            </Grid>
-                        </Form>
-                    )}
-                </Formik>
-                {/*<Formik*/}
-                {/*    initialValues={{ email: '', password: '' }}*/}
-                {/*    validate={values => {*/}
-                {/*        const errors = {};*/}
-                {/*        if (!values.email) {*/}
-                {/*            errors.email = 'Required';*/}
-                {/*        } else if (*/}
-                {/*            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)*/}
-                {/*        ) {*/}
-                {/*            errors.email = 'Invalid email address';*/}
-                {/*        }*/}
-                {/*        return errors;*/}
-                {/*    }}*/}
-                {/*    onSubmit={(values, { setSubmitting }) => {*/}
-                {/*        setTimeout(() => {*/}
-                {/*            alert(JSON.stringify(values, null, 2));*/}
-                {/*            setSubmitting(false);*/}
-                {/*        }, 400);*/}
-                {/*    }}*/}
-                {/*>*/}
-                {/*    {({ isSubmitting }) => (*/}
-                {/*        <Form>*/}
-                {/*            <Field type="email" name="email" />*/}
-                {/*            <ErrorMessage name="email" component="div" />*/}
-                {/*            <Field type="password" name="password" />*/}
-                {/*            <ErrorMessage name="password" component="div" />*/}
-                {/*            <button type="submit" disabled={isSubmitting}>*/}
-                {/*                Submit*/}
-                {/*            </button>*/}
-                {/*        </Form>*/}
-                {/*    )}*/}
-                {/*</Formik>*/}
-            </div>
-            <Box mt={8}>
-
-            </Box>
-        </Container>
-    );
 };
+
+export default Register;

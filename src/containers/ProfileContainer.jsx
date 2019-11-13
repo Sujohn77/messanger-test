@@ -1,6 +1,9 @@
 import React from 'react';
 import {Profile} from "../components/Profile.jsx";
+import withAuthRedirect from "../hoc/withAuthRedirect";
 
-export const ProfileContainer = (props) => {
+const ProfileContainer = (props) => {
     return <Profile {...props}/>
 };
+
+export default withAuthRedirect(ProfileContainer);
