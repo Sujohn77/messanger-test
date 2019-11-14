@@ -41,9 +41,11 @@ const useStyles = makeStyles(theme => ({
 let FormVerifyCode = ({prevStep,nextStep,verifyCode}) => {
     const [code,setCode] = useState("");
     const [error,setError] = useState(false);
+
     const memoizedCallBack = useCallback(() => {
         verify(code);
     },[code]);
+
     const handleChange = (e) => {
         setCode(e.target.value);
         memoizedCallBack();
@@ -53,9 +55,8 @@ let FormVerifyCode = ({prevStep,nextStep,verifyCode}) => {
     };
 
     const verify = async (code) => {
-        if(code.length === 7){
+        if(code.length === 6){
             let result = await verifyCode(code);
-            debugger
             if(result === "OK"){
                 nextStep();
             }

@@ -1,19 +1,49 @@
 import React from 'react';
-import Login from "../components/Login.jsx";
+import SignIn from "../components/Login.jsx";
 import {connect} from 'react-redux';
-import {loginThunk} from "../redux/user-reducer";
+import {setUserThunk} from "../redux/user-reducer";
+import {Redirect} from 'react-router-dom';
+import {UserAPI} from "../api/register";
 import * as axios from "axios";
-const RegisterContainer = (props) => {
+import {stopSubmit} from "redux-form";
+
+const LoginContainer = (props) => {
     const signIn = (values) => {
-        props.loginThunk(values)
+        debugger
+        if(values.length > 0){
+            props.setUserThunk(values)
+        }
     };
 
     const verifyCodeUser = async (code) =>{
-        let res = await fetch("http://localhost:3001/register/"+code,{method:"POST"});
-        return res.statusText;
+        const result = await UserAPI.verifyCode(code);
+        return result.statusText;
     };
 
-    return <Login {...props} verifyCodeUser={verifyCodeUser} signIn={signIn}/>
+    const checkEmailAndSendCode = (values) => {
+        debugger
+        return new Promise((resolve,reject)=> {
+            debugger
+            stopSubmit("emailPasswordLogin");
+            axios.post("http://localhost:3001/login/"+values.email+"&"+values.password).then(response=>{
+                if (response.data.ok){
+                    resolve(true);
+                } else{
+                   reject(false);
+                }
+            });
+        })
+
+    };
+    if (props.isAuth) return <Redirect to="/profile" />
+
+    return <SignIn {...props} verifyCodeUser={verifyCodeUser} checkEmailAndSendCode={checkEmailAndSendCode} signIn={signIn} setUserThunk={setUserThunk}/>
 };
 
-export default connect(null,{loginThunk})(RegisterContainer)
+const mapStateToProps = (state) => {
+    return {
+        isAuth:state.user.isAuth
+    }
+};
+
+export default connect(mapStateToProps,{setUserThunk})(LoginContainer)

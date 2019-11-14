@@ -46,7 +46,7 @@ const useStyles = makeStyles(theme => ({
 
 let maxLength30 = maxLengthCreator(30);
 
-let FormUserDetails = ({prevStep,handleSubmit,}) => {
+const Form = ({prevStep,handleSubmit,}) => {
     const classes = useStyles();
 
     return (<Container component="main" maxWidth="xs">
@@ -61,7 +61,7 @@ let FormUserDetails = ({prevStep,handleSubmit,}) => {
 
                         <InputLabel htmlFor="lastName" className={classes.label}>Last Name (optional)</InputLabel>
 
-                        <Field validate={[required,maxLength30]}
+                        <Field
                                id="lastName"
                                name="lastName"
                                component={Input}
@@ -82,8 +82,8 @@ let FormUserDetails = ({prevStep,handleSubmit,}) => {
             </Container>
     );
 };
- FormUserDetails =  reduxForm({
+const FormUserDetails =  reduxForm({
     form: 'detailForm'
-})(FormUserDetails);
+})(Form);
 
 export default FormUserDetails;

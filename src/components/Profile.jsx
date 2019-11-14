@@ -8,7 +8,9 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchInput from "react-search-input";
 
 import "./../assets/search-input.css";
+
 import {withAuthRedirect} from "../hoc/withAuthRedirect.jsx";
+import Settings from "./Settings/Setting.jsx";
 
 const useStyles = makeStyles(theme => ({
     main:{
@@ -29,7 +31,7 @@ const useStyles = makeStyles(theme => ({
         border:"2px solid #fff",
         borderTop: "none",
         display:"flex",
-
+        position:"relative"
     },
     dialogs:{
         background:"#fff",
@@ -65,7 +67,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export const Profile = (props) => {
+export const Profile = ({logout,...props}) => {
     const classes = useStyles();
 
     const [open,setOpen] = useState(false);
@@ -93,7 +95,7 @@ export const Profile = (props) => {
             </Container>
 
             <Grid className={classes.mainContent} >
-
+                {open && <Settings logout={logout}/>}
                 <Grid className={classes.dialogs} xs="3" item>
                     <SearchInput className={classes.search}  onChange={null} />
                 {

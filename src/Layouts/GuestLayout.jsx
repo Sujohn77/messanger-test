@@ -1,6 +1,6 @@
 import React from 'react';
 
-import SignIn from "../components/Login.jsx";
+import LoginContainer from "../containers/LoginContainer.jsx";
 
 const BlueBack = {
     background:"#5682a3",
@@ -15,7 +15,7 @@ export const GuestLayout = props => {
     return <>
         <div style={BlueBack}/>
 
-        { (props.children) ? props.children: <SignIn/>}
+        { (props.children) ? props.children: <LoginContainer/>}
 
         <div style={GreyBack}/>
     </>

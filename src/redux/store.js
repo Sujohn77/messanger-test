@@ -8,7 +8,6 @@ import {userReducer} from "./user-reducer";
 let reducers = combineReducers({
     app:appReducer,
     form:formReducer,
-    // detailForm:formReducer,
     user:userReducer
 });
 

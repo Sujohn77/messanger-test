@@ -2,18 +2,23 @@ import React from 'react';
 import Register from "../components/Register.jsx";
 import {connect} from 'react-redux';
 import {setUserThunk} from "../redux/user-reducer";
-import * as axios from "axios";
-const RegisterContainer = (props) => {
-    const signUp = (values) => {
-        props.setUserThunk(values)
-    };
+import {Redirect} from 'react-router-dom';
 
-    const verifyCodeUser = async (code) =>{
-        let res = await fetch("http://localhost:3001/register/"+code,{method:"POST"});
+const RegisterContainer = (props) => {
+    const verifyCodeUser = async (code) => {
+        let res = await fetch("http://localhost:3001/register/" + code, {method: "POST"});
         return res.statusText;
     };
 
-    return <Register {...props} verifyCodeUser={verifyCodeUser} signUp={signUp}/>
+    if (props.isAuth) return <Redirect to="/profile"/>
+
+    return <Register {...props} verifyCodeUser={verifyCodeUser}/>
 };
 
-export default connect(null,{setUserThunk})(RegisterContainer)
+const mapStateToProps = (state) => {
+    return {
+        isAuth: state.user.isAuth
+    }
+};
+
+export default connect(mapStateToProps, {setUserThunk})(RegisterContainer)

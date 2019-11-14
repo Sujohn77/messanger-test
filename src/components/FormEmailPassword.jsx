@@ -53,7 +53,7 @@ const useStyles = makeStyles(theme => ({
 let maxLength30 = maxLengthCreator(30);
 let minLength7 = minLengthCreator(7);
 
-let Form = ({handleSubmit}) => {
+let Form = ({handleSubmit,...props}) => {
     const classes = useStyles();
 
     return (<Container component="main" maxWidth="xs" >
@@ -77,8 +77,9 @@ let Form = ({handleSubmit}) => {
                            component={Input}
                            validate={[required,minLength7]}
                            className={classes.input}/>
-                </FormControl>
 
+                </FormControl>
+                {props.error && <p>{props.error}</p>}
                 <Button type="submit"
                         fullWidth
                         variant="contained"
@@ -104,10 +105,12 @@ const FormEmailPassword = ({nextStep,...props}) => {
     const onSubmit = (values) => {
 
         stopSubmit("emailPassword-form");
+
         checkUserEmail(values).then(()=> { // HOC CALLBACK IN ORDER TO SEND EMAIL
                 nextStep(); // TO THE NEXT FORM
-            },error => {
-                stopSubmit("emailPassword",{error:error});
+            },(error) => {
+            debugger
+                stopSubmit("emailPassword",{_error:error});
             }
         );
     };
@@ -121,7 +124,7 @@ const FormEmailPassword = ({nextStep,...props}) => {
                 reject("Password required");
             }
             axios.post("http://localhost:3001/register/"+values.email+"&"+values.password).then(response=>{
-                if(response.statusText !== "OK"){
+                if(!response.data.ok){
                     reject(response.data.message);
                 }
                 else{
@@ -131,7 +134,6 @@ const FormEmailPassword = ({nextStep,...props}) => {
             }
         )
     };
-
     return <ReduxForm {...props} onSubmit={onSubmit}  checkUserEmail={checkUserEmail}/>
 };
 

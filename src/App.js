@@ -5,9 +5,13 @@ import { Route , BrowserRouter as Router, Redirect,Switch} from 'react-router-do
 import {GuestLayout} from "./Layouts/GuestLayout.jsx";
 import ProfileContainer from "./containers/ProfileContainer.jsx";
 import RegisterContainer from "./containers/RegisterContainer.jsx";
+import { connect } from 'react-redux';
+import { authThunk } from "./redux/user-reducer"
 
-
-export default class App extends Component {
+class App extends Component {
+    componentDidMount (){
+        this.props.authThunk();
+    }
     render() {
         return (
             <Router>
@@ -20,3 +24,5 @@ export default class App extends Component {
             </Router>)
     }
 }
+
+export default connect(null,{authThunk})(App);

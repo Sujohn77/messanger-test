@@ -1,9 +1,9 @@
 import {UserAPI} from "../api/register";
 import {stopSubmit} from "redux-form";
 
-
-const SIGN_UP = "SIGN_UP";
+const LOG_IN = "SIGN_UP";
 const LOG_OUT = "LOG_OUT";
+
 
 let initialState = {
     data:{
@@ -12,40 +12,55 @@ let initialState = {
         firstName:null,
         lastName: null
     },
-    Auth:true
+    isAuth:false
 };
 
 export const userReducer = (state = initialState,action ) => {
     switch(action.type){
-        case SIGN_UP:
+        case LOG_IN:
             return {
                 ...state,
                 data: action.payload,
-                Auth: true
+                isAuth: true
             };
         case LOG_OUT:
             return {
                 ...state,
-                Auth: false
+                isAuth: false,
+                data: {
+                    ...state.data,
+                    email:null,
+                    password:null
+                }
             };
         default: return state;
     }
 
 };
 
-const setUser = (email,firstName,lastName) =>({type: SIGN_UP,payload:{email,firstName,lastName}});
-
+const setUser = (email,password,firstName,lastName) =>({type: LOG_IN,payload:{email,password,firstName,lastName}});
+export const logout = () => ({type: LOG_OUT});
 export const setUserThunk = (data) => async (dispatch) => {
-
     try{
-        debugger
-        const response = UserAPI.setUserData(data);
-
+        const response = await UserAPI.setUserData(data);
         if(response.ok){
-            dispatch(setUser(response.data))
+            let token = "Bearer "+response.token;
+            localStorage.setItem('token',token);
+            dispatch(setUser(response.user))
         }
     }
     catch (e) {
         console.log(e.message);
     }
 };
+
+export const authThunk = () => async (dispatch) => {
+
+    const token = localStorage.getItem('token');
+    const response = await UserAPI.getAuth(token);
+    debugger
+    if(response.isAuth){
+        dispatch(setUser(response.data));
+    }
+};
+
