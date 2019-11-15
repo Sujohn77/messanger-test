@@ -1,32 +1,18 @@
 import * as axios from "axios";
 
 const instance = axios.create({
-    baseURL:"http://localhost:3001/",
-    withCredentials: true
+    baseURL:"http://localhost:3001/"
 });
 
 export const UserAPI = {
     setUserData(data){
-        debugger
-        return instance.post(`register`,data).then(response => response.data.map(el => new User(el)));
+        return instance.post(`register/me`,data).then(response => response.data);
     },
     getAuth(token){
         axios.defaults.headers.post['authorization'] = token;
         return instance.post(`login`).then(response => response.data);
     },
-    verifyCode(code){
-        return instance.post(`login`,code);
+    sendCodeAndCheckEmail(data){
+        return instance.post("register",data).then(response => response.data)
     }
 };
-
-class User {
-
-    constructor(data) {
-        Object.assign(this, data);
-    }
-
-    get lastPost() {
-        return this.posts.sort()[0].name;
-    }
-
-}

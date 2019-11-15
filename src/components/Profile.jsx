@@ -9,8 +9,8 @@ import SearchInput from "react-search-input";
 
 import "./../assets/search-input.css";
 
-import {withAuthRedirect} from "../hoc/withAuthRedirect.jsx";
-import Settings from "./Settings/Setting.jsx";
+// import {withAuthRedirect} from "../hoc/withAuthRedirect.jsx";
+import Settings from "./Setting.jsx";
 
 const useStyles = makeStyles(theme => ({
     main:{

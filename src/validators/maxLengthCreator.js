@@ -1,3 +1,5 @@
-export const maxLengthCreator = (length) => (value) =>{
-    return value.length < length ?  undefined: "Max length is "+length;
+export const maxLengthCreator = (value) => (length) =>{
+     if(!value.length < length)  {
+         return "Max length is "+length;
+     }
 };

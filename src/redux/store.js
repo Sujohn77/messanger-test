@@ -1,17 +1,9 @@
-import {createStore, combineReducers, applyMiddleware} from "redux";
 import thunkMiddleware from "redux-thunk";
-import {reducer as formReducer} from 'redux-form';
+import {createStore, applyMiddleware} from "redux";
 
-import {appReducer} from "./app-reducer";
-import {userReducer} from "./user-reducer";
+import {reducers} from "./combineReducers";
 
-let reducers = combineReducers({
-    app:appReducer,
-    form:formReducer,
-    user:userReducer
-});
-
-let store = createStore(reducers,applyMiddleware(thunkMiddleware));
+let store = createStore(reducers, applyMiddleware(thunkMiddleware));
 
 window.store = store;
 

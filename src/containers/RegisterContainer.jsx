@@ -1,24 +1,25 @@
-import React from 'react';
-import Register from "../components/Register.jsx";
-import {connect} from 'react-redux';
-import {setUserThunk} from "../redux/user-reducer";
-import {Redirect} from 'react-router-dom';
+import React from "react";
+import Register from "./../components/Register/Register.jsx";
+import {connect} from "react-redux";
+import {sendEmailThunk, setUserData} from "./../redux/middleWares/userThunks";
+import {Redirect} from "react-router-dom";
 
 const RegisterContainer = (props) => {
-    const verifyCodeUser = async (code) => {
-        let res = await fetch("http://localhost:3001/register/" + code, {method: "POST"});
-        return res.statusText;
+    const onSubmit = (values) => {
+        setUserData(values);
     };
 
     if (props.isAuth) return <Redirect to="/profile"/>
 
-    return <Register {...props} verifyCodeUser={verifyCodeUser}/>
+    return <Register {...props} sendEmailThunk={sendEmailThunk} onSubmit={onSubmit}/>
 };
 
 const mapStateToProps = (state) => {
     return {
-        isAuth: state.user.isAuth
+        isAuth: state.user.isAuth,
+        code: state.user.data.code,
+        accessCode: state.user.accessCode
     }
 };
 
-export default connect(mapStateToProps, {setUserThunk})(RegisterContainer)
+export default connect(mapStateToProps, {sendEmailThunk, setUserData})(RegisterContainer)

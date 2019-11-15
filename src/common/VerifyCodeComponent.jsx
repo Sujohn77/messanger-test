@@ -1,7 +1,7 @@
 import React from 'react';
-import Register from "../components/Register.jsx";
+import Register from "../components/Register/Register.jsx";
 import { connect } from 'react-redux';
-import { setUserThunk } from "../redux/user-reducer";
+import { setUserThunk } from "../redux/reducers/user-reducer";
 import {Redirect} from 'react-router-dom';
 import * as axios from "axios";
 

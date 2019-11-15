@@ -1,0 +1,1 @@
+export const SET_INITIALIZE = "SET_INITIALIZE";

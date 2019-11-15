@@ -1,17 +1,18 @@
 // LIBRARIES
 import React, {Component} from 'react'
-import { Route , BrowserRouter as Router, Redirect,Switch} from 'react-router-dom';
+import {Route, BrowserRouter as Router, Redirect, Switch} from 'react-router-dom';
 // COMPONENTS
 import {GuestLayout} from "./Layouts/GuestLayout.jsx";
 import ProfileContainer from "./containers/ProfileContainer.jsx";
 import RegisterContainer from "./containers/RegisterContainer.jsx";
-import { connect } from 'react-redux';
-import { authThunk } from "./redux/user-reducer"
+import {connect} from 'react-redux';
+import {authThunk} from "./redux/middleWares/userThunks";
 
 class App extends Component {
-    componentDidMount (){
+    componentDidMount() {
         this.props.authThunk();
     }
+
     render() {
         return (
             <Router>
@@ -25,4 +26,4 @@ class App extends Component {
     }
 }
 
-export default connect(null,{authThunk})(App);
+export default connect(null, {authThunk})(App);
