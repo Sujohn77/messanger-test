@@ -1,21 +1,17 @@
-import React from 'react';
+import React from "react";
 import {SignIn} from "../components/Login.jsx";
-import {connect} from 'react-redux';
-import {Redirect} from 'react-router-dom';
-import {UserAPI} from "../api/register";
-import * as axios from "axios";
-import {stopSubmit} from "redux-form";
+import {connect} from "react-redux";
+import {Redirect} from "react-router-dom";
+import {setLogin} from "./../redux/middleWares/userThunks"
 
 const LoginContainer = (props) => {
-    const signIn = (values) => {
-        // if (values.length > 0) {
-        //     props.setUserThunk(values)
-        // }
+    const onSubmit = (values) => {
+        props.setLogin(values);
     };
+
     if (props.isAuth) return <Redirect to="/profile"/>
-    return "";
-    // return <SignIn {...props} verifyCodeUser={verifyCodeUser} checkEmailAndSendCode={checkEmailAndSendCode}
-    //                signIn={signIn} />
+
+    return <SignIn {...props} onSubmit={onSubmit} />
 };
 
 const mapStateToProps = (state) => {
@@ -24,4 +20,4 @@ const mapStateToProps = (state) => {
     }
 };
 
-export default connect(mapStateToProps)(LoginContainer)
+export default connect(mapStateToProps,{setLogin})(LoginContainer)

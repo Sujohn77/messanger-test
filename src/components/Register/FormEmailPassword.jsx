@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React from 'react';
 import {reduxForm, stopSubmit, Field} from "redux-form";
 import {connect} from 'react-redux';
 import classNames from "classnames";
@@ -97,10 +97,10 @@ let Form = ({handleSubmit, ...props}) => {
 };
 
 let ReduxForm = reduxForm({
-    form: 'emailPassword'
+    form: "emailPassword"
 })(Form);
 
-const FormEmailPassword = ({nextStep, sendEmailThunk, accessCode, ...props}) => {
+const FormEmailPassword = ({sendEmailThunk, accessCode, ...props}) => {
     const onSubmit = async (values) => {
         stopSubmit("emailPassword");
         sendEmailThunk(values);

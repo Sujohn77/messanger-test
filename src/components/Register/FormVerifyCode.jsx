@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 // MATERIAL UI
 import {makeStyles} from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
@@ -38,22 +38,18 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export const FormVerifyCode = ({prevStep, nextStep, code}) => {
+export const FormVerifyCode = ({verifyCode}) => {
     const [error, setError] = useState(false);
 
     const handleChange = (e) => {
-        const value = e.target.value;
-        if (value.length === 7) {
-            if (value === code) {
-                nextStep();
-            } else {
-                setError("Wrong code");
-            }
+        setError("");
+        if (e.target.value.length === 6) {
+            debugger
+            verifyCode(e.target.value);
         }
     };
 
     const classes = useStyles();
-
     return (<Container component="main" maxWidth="xs">
             <FormControl className={classes.paper}>
                 <h4>We send code on your email, copy and paste him in the field. </h4>
@@ -62,7 +58,7 @@ export const FormVerifyCode = ({prevStep, nextStep, code}) => {
                            maxLength="7"
                            className={classes.input}/>
                 <div>
-                    <Link href="#">Go to last page</Link>
+                    <Link onClick={() => {window.location.reload()}}>Go to last page</Link>
                 </div>
                 {error && <p className={classes.error}>Wrong code</p>}
             </FormControl>

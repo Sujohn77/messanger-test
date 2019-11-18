@@ -2,17 +2,16 @@ import * as consts from "./../actions/userActions";
 import {initialState} from "./../initialState";
 
 export const userReducer = (state = initialState, action) => {
-
     switch (action.type) {
-
         case consts.SIGN_UP_TRIAL:
             return {
                 ...state,
                 data: {
                     ...state.data,
                     email: action.payload.email,
-                    password: action.payload.email
-                }
+                    password: action.payload.password
+                },
+                accessCode: true
             };
         case consts.SIGN_UP:
             return {
@@ -21,10 +20,11 @@ export const userReducer = (state = initialState, action) => {
                 data: {
                     ...state.data,
                     firstName: action.payload.firstName,
-                    lastName: action.payload.lastName
+                    lastName: action.payload.lastName,
                 }
             };
         case consts.LOG_IN:
+            debugger
             return {
                 ...state,
                 data: action.payload,
@@ -40,14 +40,12 @@ export const userReducer = (state = initialState, action) => {
                     password: null
                 }
             };
-        case consts.SET_ACCESS_CODE:
-
+        case consts.VERIFY_CODE:
             return {
                 ...state,
-                accessCode: true
+                isVerified: true,
             };
         default:
             return state;
     }
-
 };

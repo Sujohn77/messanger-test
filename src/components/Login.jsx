@@ -58,19 +58,15 @@ const useStyles = makeStyles(theme => ({
 let maxLength30 = maxLengthCreator(30);
 let minLength7 = minLengthCreator(7);
 
-const Form = ({signIn,verifyCodeUser,checkEmailAndSendCode}) => {
+const Form = ({handleSubmit}) => {
     const classes = useStyles();
-
-    const onSubmit = async (values) => {
-        checkEmailAndSendCode(values);
-    };
 
     return <Container component="main" maxWidth="xs" className={classes.container}>
         <div className={classes.paper}>
             <h1 className={classes.h1}>
                 Login
             </h1>
-            <form onSubmit={onSubmit} className={classes.form}>
+            <form onSubmit={handleSubmit} className={classes.form}>
                 <Field component={"input"}
                        className={classes.input}
                        validate={[maxLength30,required]}
@@ -108,5 +104,5 @@ const Form = ({signIn,verifyCodeUser,checkEmailAndSendCode}) => {
 };
 
 export const SignIn = reduxForm({
-    form: 'emailPasswordLogin'
+    form: "login"
 })(Form);

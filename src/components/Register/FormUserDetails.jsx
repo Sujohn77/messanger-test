@@ -1,4 +1,5 @@
 import React from "react";
+import {connect} from 'react-redux';
 // MATERIAL UI
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -10,11 +11,13 @@ import {required} from "../../validators/required";
 import {maxLengthCreator} from "../../validators/maxLengthCreator";
 import Link from "@material-ui/core/Link";
 import { Input } from "../../common/FormsControl.jsx";
+import { setUserData } from "../../redux/middleWares/userThunks";
 
 const useStyles = makeStyles(theme => ({
     form: {
         width: "100%", // Fix IE 11 issue.
         marginTop: theme.spacing(1),
+        overflow:"hidden",
     },
     paper: {
         margin: theme.spacing(1),
@@ -24,7 +27,7 @@ const useStyles = makeStyles(theme => ({
         height:"250px",
         padding: "15px",
         background: "#fff",
-        overflow:"hidden",
+        
         borderRadius: "4px",
         position:"relative",
     },
@@ -49,7 +52,7 @@ const Form = ({prevStep,handleSubmit,}) => {
     const classes = useStyles();
 
     return (<Container component="main" maxWidth="xs">
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit} className={classes.form}>
                         <InputLabel htmlFor="firstName" className={classes.label}>First Name</InputLabel>
                         <Field validate={[required,maxLength30]}
                                id="firstName"
@@ -79,6 +82,15 @@ const Form = ({prevStep,handleSubmit,}) => {
             </Container>
     );
 };
-export const FormUserDetails =  reduxForm({
+const mapActionToProps = (dispatch) => {
+    return {
+        setUserData: (values) => {
+            dispatch(setUserData(values));
+        }
+    }
+};
+export const ReduxForm =  reduxForm({
     form: "detailForm"
 })(Form);
+
+export const FormUserDetails =  connect(null,mapActionToProps)(ReduxForm)

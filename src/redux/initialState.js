@@ -5,9 +5,11 @@ export const initialState = {
         password:null,
         firstName:null,
         lastName: null,
-        code: null
+        _id:null,
+        dialogs:[]
     },
     emailError: false,
     isAuth:false,
-    accessCode:false
+    accessCode:false,
+    isVerified: false
 };

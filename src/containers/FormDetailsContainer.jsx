@@ -5,7 +5,6 @@ import {setUserAPI} from "../redux/user-reducer";
 
 const FormDetailsContainer = (props) => {
     const signUp = (data) => {
-        debugger
         props.setUserAPI(data)
     };
     return <FormUserDetails {...props} signUp={signUp}/>
