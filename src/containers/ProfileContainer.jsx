@@ -1,38 +1,36 @@
 import React, {useEffect} from 'react';
-import {Profile} from "../components/Profile.jsx";
+import {Profile} from "../components/Profile/Profile.jsx";
 import withAuthRedirect from "../hoc/withAuthRedirect";
 import {connect} from "react-redux";
 import {compose} from "redux";
-import {logout} from "../redux/actionCreators/userActionCreators";
-import {addUser} from "./../redux/middleWares/userThunks";
-import {Redirect} from 'react-router-dom';
+import {logout} from "../redux/actionCreators/loginActionCreators";
+import {addFriend,searchUsers} from "./../redux/middleWares/userThunks";
+import {setAuth} from "../redux/actionCreators/authActionCreators";
 
-const ProfileContainer = ({logout,addUser,userId,...props}) => {
-    // useEffect(()=> {
-    //     getDialogs();
-    // },[]);
-    debugger
+const ProfileContainer = ({logout,addUser,userId,searchUsers,setAuth,...props}) => {
     useEffect(()=> {
-        if(userId != null){
-            debugger
-            addUser("stonebo0sh@gmail.com",userId);
-        }
-    },[userId]);
-    const logoutWithToken = () => {
-        debugger
-        localStorage.clear();
-        logout();
+        addFriend("stonebo0sh@gmail.com","Huan");
+    },[]);
+
+    const handleSearch = (e) => {
+        searchUsers(e.target.value);
     };
-    return <Profile {...props} logout={logoutWithToken}/>
+
+    const logoutWithToken = () => {
+        localStorage.clear();
+
+        logout();
+        setAuth(false);
+    };
+    return <Profile {...props} logout={logoutWithToken} handleSearch={handleSearch}/>
 };
 const mapStateToProps = state => {
     debugger
     return {
-        userId: state.user.data._id,
-        dialogs:state.user.data.dialogs
+        dialogs:state.profilePage.dialogs
     }
 };
 export default compose(
     withAuthRedirect,
-    connect(mapStateToProps, {logout,addUser})
+    connect(mapStateToProps, {logout,addFriend,searchUsers,setAuth})
 )(ProfileContainer);

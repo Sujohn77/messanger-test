@@ -16,7 +16,7 @@ const LoginContainer = (props) => {
 
 const mapStateToProps = (state) => {
     return {
-        isAuth: state.user.isAuth
+        isAuth: state.auth.isAuth
     }
 };
 

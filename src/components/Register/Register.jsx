@@ -4,14 +4,15 @@ import {FormUserDetails} from './FormUserDetails.jsx';
 import {FormWithConnect} from './FormEmailPassword.jsx';
 import {FormVerifyCode} from "./FormVerifyCode.jsx";
 
-const Register = ({onSubmit, isVerified, verifyCode, sendEmailThunk, accessCode}) => {
+const Register = ({onSubmit, isVerified, verifyCode, sendEmailThunk, email}) => {
     const [step, setStep] = useState(1);
 
     useEffect(() => {
-        if(accessCode){
+    debugger
+        if(email !== null || isVerified){
             setStep(step+1);
         }
-    },[accessCode,isVerified]);
+    },[email,isVerified]);
 
     switch (step) {
         case 1:

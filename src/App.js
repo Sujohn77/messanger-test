@@ -10,7 +10,6 @@ import {authThunk} from "./redux/middleWares/userThunks";
 
 class App extends Component {
     componentDidMount() {
-    debugger
         this.props.authThunk(); // CHECK ON AUTHORISING
     }
 

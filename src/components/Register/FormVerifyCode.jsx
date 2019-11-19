@@ -44,7 +44,6 @@ export const FormVerifyCode = ({verifyCode}) => {
     const handleChange = (e) => {
         setError("");
         if (e.target.value.length === 6) {
-            debugger
             verifyCode(e.target.value);
         }
     };

@@ -9,18 +9,17 @@ const RegisterContainer = ({setUserData, email, password, ...props}) => {
         setUserData({email, password, firstName, lastName});
     };
 
-    if (props.isAuth) return <Redirect to="/profile"/>
+    // if (props.isAuth) return <Redirect to="/profile"/>;
 
-    return <Register {...props} onSubmit={onSubmit}/>
+    return <Register {...props} email={email} password={password} onSubmit={onSubmit} />
 };
 
 const mapStateToProps = (state) => {
     return {
-        isAuth: state.user.isAuth,
-        accessCode: state.user.accessCode,
-        email: state.user.data.email,
-        password: state.user.data.password,
-        isVerified: state.user.isVerified
+        // isAuth: state.auth.isAuth,
+        email: state.registerPage.email,
+        password: state.registerPage.password,
+        isVerified: state.registerPage.isVerified
     }
 };
 
