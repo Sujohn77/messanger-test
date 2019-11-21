@@ -8,7 +8,6 @@ const Register = ({onSubmit, isVerified, verifyCode, sendEmailThunk, email}) => 
     const [step, setStep] = useState(1);
 
     useEffect(() => {
-    debugger
         if(email !== null || isVerified){
             setStep(step+1);
         }

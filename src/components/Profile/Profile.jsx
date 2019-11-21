@@ -8,7 +8,7 @@ import styled from "styled-components";
 import "../../assets/search-input.css";
 
 import {Header} from "./Header/Header.jsx";
-import {SideBar} from "./SideBar";
+import {SideBar} from "./SideBar.jsx";
 import {Main} from "./Main.jsx";
 
 const StyledDiv = styled.div`
@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const Profile = ({logout, sendMessage, dialogs = [], searchUsers,handleSearch}) => {
+export const Profile = ({logout,addFriend, sendMessage, dialogs = [], searchItems,handleSearch}) => {
     const classes = useStyles();
 
     const [openSettings, setOpenSettings] = useState(false);
@@ -45,7 +45,7 @@ export const Profile = ({logout, sendMessage, dialogs = [], searchUsers,handleSe
                         <Header openSettings={openSettings} setOpenSettings={setOpenSettings}/>
                     </Grid>
                     <Grid className={classes.mainContent}>
-                        <SideBar logout={logout} searchUsers={searchUsers} dialogs={dialogs} openSettings={openSettings} handleSearch={handleSearch}/>
+                        <SideBar addFriend={addFriend} logout={logout} searchItems={searchItems} dialogs={dialogs} openSettings={openSettings} handleSearch={handleSearch}/>
                         <Main sendMessage={sendMessage}/>
                     </Grid>
                 </Grid>

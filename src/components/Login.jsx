@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
         margin: "15px"
     },
     submit: {
-        margin: theme.spacing(2, 0, 2),
+        margin: theme.spacing(5, 0, 2),
     },
     h1: {
         textAlign: "center",
@@ -50,6 +50,7 @@ const useStyles = makeStyles(theme => ({
     },
     input: {
         width: "100%",
+        margin:"1rem 0",
         animationName: "MuiInputBase-keyframes-auto-fill-cancel",
         webkitTapHighlightColor: "transparent",
     }

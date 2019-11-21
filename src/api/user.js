@@ -27,11 +27,12 @@ export const UserAPI = {
 };
 
 export const ProfileAPI ={
-    addFriend(data,token){
-        axios.defaults.headers.post['authorization'] = token;
-        return axios.post("http://localhost:3001/profile/add",data).then(returnData);
+    
+    addFriend(friendEmail,id){
+        
+        return instance.post("profile/add",{friendEmail,id}).then(returnData);
     },
-    getUsers(name){
-        return instance.get("profile/users/"+name).then(returnData);
+    getUsers(firstName,lastName){
+        return instance.post("profile/users",{firstName,lastName}).then(returnData);
     }
 };

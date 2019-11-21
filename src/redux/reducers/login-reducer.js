@@ -1,7 +1,7 @@
 import * as consts from "./../actions/loginActions";
 
 export const initialState = {
-    data: {
+    user: {
         email:null,
         password:null,
         firstName:null,

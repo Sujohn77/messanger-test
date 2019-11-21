@@ -2,11 +2,11 @@ import React from "react";
 import Register from "./../components/Register/Register.jsx";
 import {connect} from "react-redux";
 import {sendEmailThunk, setUserData, verifyCode} from "./../redux/middleWares/userThunks";
-import {Redirect} from "react-router-dom";
 
 const RegisterContainer = ({setUserData, email, password, ...props}) => {
     const onSubmit = ({firstName, lastName}) => {
         setUserData({email, password, firstName, lastName});
+        window.reload();
     };
 
     // if (props.isAuth) return <Redirect to="/profile"/>;
