@@ -23,3 +23,13 @@ export const getFilteredSearchUsers = createSelector([getSearchUsers,getProfileI
          return searchUsers.filter((item) => item._id !== id && item)
     } 
 );
+
+const getProfileName = (state) => {
+    return state.loginPage.user.firstName + " " + state.loginPage.user.lastName;
+}
+
+export const getUserForSocket = createSelector([getProfileId,getProfileName],
+    (id,name) => { 
+        return {id, name};
+   } 
+);

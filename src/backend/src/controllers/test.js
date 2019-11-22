@@ -28,7 +28,7 @@ testController.get = async (req, res) => {
 };
 
 testController.clearDialogs = async (req, res) => {
-    User.updateOne({}, {$set: {"chatsId": []}}, (err) => {
+    User.updateMany({}, {$set: {"chatsId": []}}, (err) => {
         if (err) {
             console.log(err);
         }

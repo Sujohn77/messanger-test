@@ -2,7 +2,7 @@ import * as consts from "./../actions/profileActions";
 
 export const initialState = {
     searchUsers: [],
-    dialogs: [],
+    chats: [],
     id: null
 };
 
@@ -15,17 +15,16 @@ export const profileReducer = (state = initialState,action ) => {
             }
         }
         case consts.ADD_FRIEND: {
-            debugger
             return {
                 ...state,
-                dialogs: state.dialogs.push(action.payload)
+                chats: [...state.chats,action.payload]
             }
         }
         case consts.SET_PROFILE_DATA: {
             return {
                 ...state,
                id:action.payload.id,
-                dialogs:(action.payload.dialogs !== null) ? action.payload.dialogs : []
+               chats:[action.payload.chats]
             }
         }
         default: return state;

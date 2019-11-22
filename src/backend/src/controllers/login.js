@@ -54,15 +54,53 @@ loginController.checkAuth = async (req, res) => {
             const _id = myProfile.id;
             const user = { email: myProfile.email, password: myProfile.password, firstName: myProfile.firstName, lastName: myProfile.lastName }
 
-            const chatsId = myProfile.chatsid;
-            const dialogs = await chatServices.findChatByFilter(chatsId, "id");
+            const chatsId = myProfile.chatsId[0];
 
-            response = {
-                resultCode: 0,
-                data: { user, _id, dialogs }
-            };
+            const chatsWithIds = await chatServices.findChatByFilter(chatsId, "id");
+            for (item of chatsWithIds.membersId) {
+                if (item != myProfile.id) {
+                    const user = await userServices.findUserByFilter(item, "id");
+                    chatsWithIds.name = user.firstName + " " + user.lastName;
+                }
+            }
+            chatsWithIds.save();
 
-            res.status(200).json(response);
+            let query = "";
+            if(chatsWithIds.messagesId.length > 0){
+                chatsWithIds.messagesId.forEach(element => {
+                    if(chatsWithIds.messagesId[chatsWithIds.membersId.length -1] == element){
+                        query += `{_id:${element}}`
+                    }
+                    else{
+                        query += `{_id:${element}},`
+                    }
+                });
+                console.log(query);
+            
+                Message.find( { $or:[ query]},(err,msgs) => {
+                    if(err){
+                        console.log(err);
+                    }
+                    const chats = {_id: chatsWithIds._id,type:chatsWithIds.type,membersId: chatsWithIds.membersId, name: chatsWithIds.name,messages:msgs}
+
+                    response = {
+                        resultCode: 0,
+                        data: { user, _id, chats }
+                    };
+        
+                    res.status(200).json(response);
+                })
+            }  
+            else{
+                const chats = {_id: chatsWithIds._id,type:chatsWithIds.type,membersId: chatsWithIds.membersId, name: chatsWithIds.name,messages:[]}
+                response = {
+                    resultCode: 0,
+                    data: { user, _id, chats }
+                };
+    
+                res.status(200).json(response);
+                
+            }
         }
     });
 };

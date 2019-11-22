@@ -1,6 +1,6 @@
 //LIBRARIES
 const jwt = require("jsonwebtoken");
-const {promisify} = require("util");
+const { promisify } = require("util");
 //MODELS
 const User = require("../models/user");
 const Chat = require("../models/chat");
@@ -84,42 +84,32 @@ profileController.addFriend = async (req, res) => {
             res.status(200).json(response);
         }
         else {
-            // const result = await chatServices.createChat(myProfile.id, friendProfile.id, "dialog", myProfile, friendProfile);
-
             const chat = await chatServices.findChatByFilter([myProfile.id, friendProfile.id], "members");
 
             if (chat == null) {
-                return Chat.create({ type: "dialog", membersId: [myProfile.id, friendProfile.id],messagesId:[] }, async (err, chat) => {
+                return Chat.create({ type: "dialog", membersId: [myProfile.id, friendProfile.id], messagesId: [] }, async (err, chat) => {
 
                     if (err) {
                         console.log(err);
                         return false;
                     }
 
-                    if (chat !== null) {
-                        // userServices.updateChatsUser(myProfile.id, chat.id);
-                        // userServices.updateChatsUser(friendProfile.id, chat.id);
+                    myProfile.chatsId = Array.from(new Set([...myProfile.chatsId, chat.id]));
+                    await myProfile.save();
 
-                        await User.findOneAndUpdate(friendProfile.id, {$push: {"chatsId": chat.id}}, {useFindAndModify: false});
-                        await User.updateOne({id: myProfile.id}, {$push: {"chatsId": chat.id}} ,(err,user)=>{
-                            console.log(user);
-                            return 1;
-                        });
-                        
+                    friendProfile.chatsId = Array.from(new Set([...friendProfile.chatsId, chat.id]));
+                    await friendProfile.save();
+                    
+                    const dialogNewFriend = { chatName: friendProfile.firstName + " " + friendProfile.lastName, messages: [] }
 
-                        const dialogNewFriend = {chatName: friendProfile.firstName+" "+friendProfile.lastName,messages:[]}
-                        response = {
-                            resultCode: 0,
-                            data: { dialogNewFriend }
-                        };
-                 
-                        res.status(200).json(response);
-                        
-                    }
+                    response = {
+                        resultCode: 0,
+                        data: { dialogNewFriend }
+                    };
+
+                    res.status(200).json(response);
                 });
-
             }
-
         }
     }
 };

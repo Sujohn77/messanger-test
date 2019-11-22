@@ -8,6 +8,7 @@
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.0",
     "classnames": "^2.2.6",
+    "grunt": "^1.0.4",
     "mails": "^0.2.0",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
@@ -15,6 +16,7 @@
     "react-scripts": "3.2.0",
     "react-search-input": "^0.11.3",
     "reselect": "^4.0.0",
+    "socket.io-client": "^2.3.0",
     "styled-components": "^4.4.1"
   },
   "scripts": {

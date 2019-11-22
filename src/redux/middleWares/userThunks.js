@@ -53,10 +53,10 @@ export const setLogin = ({ email, password }) => async (dispatch) => {
             const initializeUser = initializer(dispatch);
             const id = response.data._id;
 
-            const dialogs = response.data.dialogs;
+            const chats = response.data.chats;
             const userInfo = response.data.user;
 
-            initializeUser({ id, dialogs }, userInfo);
+            initializeUser({ id, chats }, userInfo);
         }
         else {
             stopSubmit("login", { _error: response.message });
@@ -83,7 +83,7 @@ export const verifyCode = (code) => async (dispatch) => {
 export const addFriend = (friendEmail) => async (dispatch) => {
     try {
         let state = store.getState();
-        debugger
+        
         const response = await ProfileAPI.addFriend(friendEmail, state.profilePage.id);
         debugger
         if (response.resultCode === 0) {
@@ -121,11 +121,11 @@ export const authThunk = () => async (dispatch) => {
         if (response.resultCode === 0) {
             const initializeUser = initializer(dispatch);
             const id = response.data._id;
-
-            const dialogs = response.data.dialogs;
+            
+            const chats = response.data.chats;
             const userInfo = response.data.user;
 
-            initializeUser({ id, dialogs }, userInfo);
+            initializeUser({ id, chats }, userInfo);
         }
     }
 };

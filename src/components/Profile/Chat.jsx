@@ -15,31 +15,34 @@ const StyledDiv = styled.div`
     padding:20px
 `;
 
-export const Main = ({sendMessage}) => {
+export const Chat = ({sendMessage,chat}) => {
     const [message, setMessage] = useState("");
 
-    const handleEnter = (e) => {
-        if (e.keyCode === 13) {
-            sendMessage(message)
-        }
-    };
+    // const handleEnter = (e) => {
+    //     debugger
+    //     if (e.keyCode === 13) {
+    //         sendMessage(message)
+    //     }
+    // };
 
-    useEffect(() => {
-        window.addEventListener("onkeypress", handleEnter);
-        return () => {
-            window.removeEventListener("onkeypress", handleEnter);
-        }
-    }, [message]);
-
+    // useEffect(() => {
+        
+    //     window.addEventListener("onkeypress", handleEnter);
+    //     return () => {
+    //         window.removeEventListener("onkeypress", handleEnter);
+    //     }
+    // }, []);
+    
     return <Grid xs="9" item>
         <Grid item>
             <StyledDiv>
-                Messages
+                {chat && chat.messages.map((msg) =>  <p key={msg.id}>msg.text</p>)}
             </StyledDiv>
         </Grid>
 
         <Grid item>
             <StyledTextarea name="" id="" cols="30" rows="10"  onChange={(e) => setMessage(e.target.value)}/>
+            <button onClick={() => sendMessage(message)}>Send</button>
         </Grid>
     </Grid>
 };

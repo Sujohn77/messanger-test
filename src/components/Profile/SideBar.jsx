@@ -34,7 +34,6 @@ const StyledSearchUsers = styled.div`
     }
 `
 
-
 const useStyles = makeStyles(theme => ({
     dialogs: {
         background: "#fff",
@@ -69,20 +68,20 @@ export const SideBar = ({logout, addFriend, searchItems, dialogs,openSettings,ha
     const classes = useStyles();
     
     const searchElements = searchItems &&  
-        searchItems.map((item) => <div>
-            <div key={item.id}>{item.email}</div>
+        searchItems.map((item) => <div key={item.id}>
+            <div>{item.email}</div>
             <button onClick={() => {addFriend(item.email)}}>Add</button>
         </div>);
     
     
     const userDialogs = dialogs !== null && dialogs.map((item) =>
-        <Grid className={classes.dialog}>
+        <Grid key={item._id} className={classes.dialog}>
             <InputAdornment position="start">
                 <AccountCircle fontSize="large"/>
             </InputAdornment>
             <Container className={classes.dialogDetails}>
-                <Row row>{item.chatName}</Row>
-                <Row row className={classes.messageText}>{item.lastMessage}</Row>
+                <Row  row>{item.name}</Row>
+                <Row  row className={classes.messageText}>{item.lastMessage}</Row>
             </Container>
         </Grid>);
 

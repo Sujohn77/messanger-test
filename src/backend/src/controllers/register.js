@@ -116,7 +116,7 @@ registerController.registerMe = async (req, res) => {
         }
     });
 
-    User.create({email, password, firstName, lastName,chatsId : []}, async (err) => {
+    User.create({email, password, firstName, lastName,chatsId : ["5dd793c74fb8ea2118071043"]}, async (err) => {
         if (err) {
             console.log(err);
         }
