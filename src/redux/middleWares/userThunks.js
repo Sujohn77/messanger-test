@@ -4,7 +4,7 @@ import store from "./../store"
 import { UserAPI, ProfileAPI } from "../../api/user";
 
 import { setRegister, setTrialRegister, verify } from "../actionCreators/registerActionCreators";
-import { addNewFriend, setSearchUsers, setProfileData } from "../actionCreators/profileActionCreators";
+import { addNewFriend, setSearchUsers, setProfileData, clearMessagesChat } from "../actionCreators/profileActionCreators";
 import { login } from "../actionCreators/loginActionCreators";
 import { setAuth } from "../actionCreators/authActionCreators";
 
@@ -66,6 +66,18 @@ export const setLogin = ({ email, password }) => async (dispatch) => {
     }
 };
 
+export const clearAll = (chatId) => async (dispatch) => {
+    try {
+        const response = await ProfileAPI.clearChat(chatId);
+        
+        if (response.resultCode === 0) {
+            dispatch(clearMessagesChat(chatId));
+        }
+    } catch (e) {
+        console.log(e.message);
+    }
+};
+
 export const verifyCode = (code) => async (dispatch) => {
     try {
         const response = await UserAPI.verifyCode({ code });
@@ -101,7 +113,6 @@ export const searchUsers = (firstName, lastName = "") => async (dispatch) => {
         }
         else {
             const response = await ProfileAPI.getUsers(firstName, lastName);
-
             if (response.resultCode === 0) {
                 dispatch(setSearchUsers(response.data.users));
             }
@@ -124,7 +135,7 @@ export const authThunk = () => async (dispatch) => {
             
             const chats = response.data.chats;
             const userInfo = response.data.user;
-
+            
             initializeUser({ id, chats }, userInfo);
         }
     }

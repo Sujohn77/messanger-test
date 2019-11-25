@@ -34,7 +34,7 @@ chatServices.createChat = async (id, friendId, type, myProfile, friendProfile) =
 
 }
 
-chatServices.findChatByFilter = (filterValue, filterName) => {
+chatServices.findChatsByFilter = (filterValue, filterName) => {
     switch (filterName) {
         case "members":
             return Chat.findOne({ membersId: filterValue }, (err, chat) => {
@@ -44,14 +44,29 @@ chatServices.findChatByFilter = (filterValue, filterName) => {
                 return chat;
             });
         case "id":
-            return Chat.findById(filterValue, (err, chat) => {
+            return Chat.find({ _id: { $in: filterValue }}, (err, chat) => {
                 if (err) {
                     console.log(err);
                 }
                 return chat;
             });
+        default:
     }
 }
 
+
+chatServices.findByIdAndUpdate = (chatId) => {
+    return Chat.findByIdAndUpdate(chatId,{$set:{messagesId:[]}},(err) =>{
+        return err;
+    });
+}
+
+chatServices.addMessage = (messageId, chatId) => {
+    Chat.findOneAndUpdate({_id:chatId},{$push:{messagesId:messageId}},{useFindAndModify:false},(err)=>{
+        if(err){
+            console.log(err);
+        }
+    })
+}
 
 module.exports = chatServices;

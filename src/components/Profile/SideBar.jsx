@@ -64,7 +64,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const SideBar = ({logout, addFriend, searchItems, dialogs,openSettings,handleSearch}) => {
+export const SideBar = ({logout, addFriend, searchItems, chats,openSettings,handleSearch}) => {
     const classes = useStyles();
     
     const searchElements = searchItems &&  
@@ -74,7 +74,7 @@ export const SideBar = ({logout, addFriend, searchItems, dialogs,openSettings,ha
         </div>);
     
     
-    const userDialogs = dialogs !== null && dialogs.map((item) =>
+    const userChats = chats && chats.map((item) =>
         <Grid key={item._id} className={classes.dialog}>
             <InputAdornment position="start">
                 <AccountCircle fontSize="large"/>
@@ -93,7 +93,7 @@ export const SideBar = ({logout, addFriend, searchItems, dialogs,openSettings,ha
 
             <StyledSearchUsers id="users">{searchElements}</StyledSearchUsers>
 
-            {userDialogs}
+            {userChats}
         </Grid>
     </>
 };

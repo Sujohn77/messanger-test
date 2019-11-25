@@ -23,6 +23,7 @@
     "mongoose": "^5.7.9",
     "nodemon": "^2.0.1",
     "socket.io": "^2.3.0",
-    "util": "^0.12.1"
+    "util": "^0.12.1",
+    "util.promisify": "^1.0.0"
   }
 }

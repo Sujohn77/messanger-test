@@ -12,7 +12,6 @@ userServices.findUserByFilter = (filterValue,filterName) => {
                     return user;
                 }
             });
-      
         case "id": 
             return User.findById(filterValue,(err,user) =>{
                 if(err){
@@ -22,11 +21,42 @@ userServices.findUserByFilter = (filterValue,filterName) => {
                     return user;
                 }
             });
+            default:
+                return User.findById(filterValue,(err,user) =>{
+                    if(err){
+                        console.log(err);
+                    }
+                    else {
+                        return user;
+                    }
+                });
+    }
+}
+
+userServices.findUsersByFilter = (filterValue,filterName) => {
+    switch(filterName){
+        case "id": 
+            return User.find({ _id: { $in: filterValue }},(err,user) =>{
+                if(err){
+                    console.log(err);
+                }
+                else {
+                    return user;
+                }
+            });
+            default:
+                return User.find({ _id: { $in: filterValue }},(err,user) =>{
+                    if(err){
+                        console.log(err);
+                    }
+                    else {
+                        return user;
+                    }
+                });
     }
 }
 
 userServices.updateChatsUser = (id,chatId) => {
-    
     return User.findOneAndUpdate(id, {$push: {"chatsId": chatId}}, {useFindAndModify: false});
 }
 

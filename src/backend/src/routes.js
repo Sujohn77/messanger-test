@@ -2,7 +2,6 @@ const express = require("express");
 const routes = express.Router();
 
 const verifyToken = require("./verifyToken");
-const checkBody = require("./middleWares/checkBody");
 
 const profileController = require("./controllers/profile");
 const loginController = require("./controllers/login");
@@ -24,6 +23,8 @@ routes.post("/profile/create/:name",verifyToken,profileController.createGroup);
 routes.post("/profile/add",profileController.addFriend);
 
 routes.post("/profile/users",profileController.getUserWithName);
+
+routes.post("/profile/chat",profileController.clearChatMessages);
 
 // TEST ROUTES
 routes.get("/users", testController.get);

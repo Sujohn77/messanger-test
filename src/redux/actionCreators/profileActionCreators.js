@@ -15,3 +15,9 @@ export const setProfileData = (data) => ({
     payload: data
 });
 
+export const clearMessagesChat = (chatId) => ({
+    type: consts.DELETE_MESSAGES_CHAT,
+    payload: chatId
+});
+
+

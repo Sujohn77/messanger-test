@@ -1,9 +1,0 @@
-input[type="search"]{
-    border:none;
-    width:-webkit-fill-available;
-    padding-left: 10px;
-    height:40px;
-    background: #F2F2F2;
-    border-radius: 2px;
-    margin: 7px;
-}

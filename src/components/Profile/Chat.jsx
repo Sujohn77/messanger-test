@@ -1,49 +1,89 @@
-import React, {useEffect, useState} from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import Grid from "@material-ui/core/Grid";
+// import {Grid} from "./../../common/Grid.jsx";
 
-import "../../assets/search-input.css";
-
-const StyledTextarea = styled.textarea`
-    margin-top: 89%
-    min-width: -webkit-fill-available
-    height: 50px
+const StyledInput = styled.input`
+    height: 30px
     border: none
+    width:88%
 `;
+const Container = styled.div`
+    width:100%
+`
 
 const StyledDiv = styled.div`
     padding:20px
+    width:100%
+    > div{
+        width:100%
+        margin:1rem 0
+        display: flex
+    }
+`;
+const StyledFlexMax = styled.div`
+    display:flex
+    height:95%
 `;
 
-export const Chat = ({sendMessage,chat}) => {
-    const [message, setMessage] = useState("");
+const StyledButton = styled.button`
+    background: #5682a3
+    color:  white
+    font-size: 1em
+    width:100px
+    padding: 0.25em 1em
+    border:none
+    border-radius: 3px
+`;
 
-    // const handleEnter = (e) => {
-    //     debugger
-    //     if (e.keyCode === 13) {
-    //         sendMessage(message)
-    //     }
-    // };
+const StyledFlex = styled.div`
+    display:flex
+    position:relative
+`;
 
-    // useEffect(() => {
-        
-    //     window.addEventListener("onkeypress", handleEnter);
-    //     return () => {
-    //         window.removeEventListener("onkeypress", handleEnter);
-    //     }
-    // }, []);
+const MyMessage = styled.div`
+    justify-content: flex-end
+    div{
+        background:#fff
+        border-radius: 13px
+        padding: 10px
+        width: fit-content
+    }
     
-    return <Grid xs="9" item>
-        <Grid item>
-            <StyledDiv>
-                {chat && chat.messages.map((msg) =>  <p key={msg.id}>msg.text</p>)}
-            </StyledDiv>
-        </Grid>
+`;
 
-        <Grid item>
-            <StyledTextarea name="" id="" cols="30" rows="10"  onChange={(e) => setMessage(e.target.value)}/>
-            <button onClick={() => sendMessage(message)}>Send</button>
-        </Grid>
-    </Grid>
+const FriendMessage = styled.div`
+    justify-content: flex-start
+    div{
+        background: yellow
+        width: fit-content
+        padding: 10px
+        border-radius: 13px
+    }
+`;
+
+export const Chat = ({ sendMessage, chat, clearAll, user }) => {
+    const [message, setMessage] = useState("")
+    const messages = chat && chat.messages.map((msg) => {
+        if (msg.sender === user.name) {
+            return <MyMessage key={msg.id}><div>{msg.text}</div></MyMessage>
+        }
+        else {
+            return <FriendMessage key={msg.id}><div>{msg.text}</div></FriendMessage>
+        }
+    });
+
+    return <Container>
+        <StyledFlexMax>
+            <StyledDiv>
+                <StyledButton onClick={() => clearAll(chat._id)}>Clear</StyledButton>
+                {messages}
+            </StyledDiv>
+        </StyledFlexMax>
+
+        <StyledFlex>
+            <StyledInput onChange={(e) => setMessage(e.target.value)} />
+            <StyledButton onClick={() => sendMessage(message)}>Send</StyledButton>
+        </StyledFlex>
+    </Container>
 };
 

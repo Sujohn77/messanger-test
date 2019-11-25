@@ -24,7 +24,18 @@ export const profileReducer = (state = initialState,action ) => {
             return {
                 ...state,
                id:action.payload.id,
-               chats:[action.payload.chats]
+               chats:action.payload.chats
+            }
+        }
+        case consts.DELETE_MESSAGES_CHAT: {
+            return {
+                ...state,
+               chats:state.chats.map((ch) => {
+                   if(ch._id === action.payload) {
+                       ch.messages = []
+                   }
+                   return ch;
+               })
             }
         }
         default: return state;

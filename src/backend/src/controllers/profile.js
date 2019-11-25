@@ -1,12 +1,12 @@
 //LIBRARIES
 const jwt = require("jsonwebtoken");
-const { promisify } = require("util");
 //MODELS
 const User = require("../models/user");
 const Chat = require("../models/chat");
 //SERVICES
 const chatServices = require("./../services/chatRequests");
 const userServices = require("./../services/userRequests");
+const messageServices = require("./../services/messageRequests");
 
 let response = require("./../response");
 
@@ -29,7 +29,7 @@ profileController.createGroup = async (req, res) => {
             res.status(400).json(response);
         }
 
-        Group.findOne({ nameGroup }, (err, group) => {
+        Chat.findOne({ nameGroup }, (err, group) => {
             if (err) {
                 response = {
                     resultCode: 1,
@@ -40,7 +40,7 @@ profileController.createGroup = async (req, res) => {
             }
 
             if (group === null) {
-                Group.create({ name: nameGroup, members: [user.name], messages: [], emailOwner: user.email }, (err) => {
+                Chat.create({ name: nameGroup, members: [user.name], messages: [], emailOwner: user.email }, (err) => {
                     if (err) {
                         response = {
                             resultCode: 1,
@@ -59,7 +59,21 @@ profileController.createGroup = async (req, res) => {
         });
     });
 };
+profileController.clearChatMessages = async(req,res) => {
+    const { chatId } = req.body;
 
+    if(chatId){
+        const {errChat} = await chatServices.findByIdAndUpdate(chatId);
+        const {errMessage} = await messageServices.deleteByChatId(chatId);
+        if(!errChat && !errMessage){
+            response = {
+                resultCode: 0,
+                data: {},
+            };
+            res.status(200).json(response);
+        }
+    }
+}
 profileController.addFriend = async (req, res) => {
     const { friendEmail, id } = req.body;
 
@@ -67,11 +81,11 @@ profileController.addFriend = async (req, res) => {
 
     const friendProfile = await userServices.findUserByFilter(friendEmail, "email");
 
-    const isMyFriend = false;
+    let isMyFriend = false;
 
     if (myProfile !== null && friendProfile !== null) {
         myProfile.chatsId.forEach(item => {
-            if (item == friendProfile._id) {
+            if (item === friendProfile._id) {
                 isMyFriend = true;
             }
         });

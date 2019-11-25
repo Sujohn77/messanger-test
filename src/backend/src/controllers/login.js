@@ -1,10 +1,12 @@
 //LIBRARIES
 const jwt = require("jsonwebtoken");
+const promifisy = require("./../utils/promisify");
 //MODELS
 const User = require("../models/user");
 //SERVICES
 const chatServices = require("./../services/chatRequests");
 const userServices = require("./../services/userRequests");
+const messageServices = require("./../services/messageRequests");
 
 let response = require("./../response");
 
@@ -45,64 +47,53 @@ loginController.login = async (req, res) => {
 };
 
 loginController.checkAuth = async (req, res) => {
-    jwt.verify(req.token, "secretKey", async (err, userInfo) => {
-        if (err) {
-            console.log(err)
-        } else {
-            const myProfile = await userServices.findUserByFilter(userInfo.user.email, "email");
+    const jwtVerify = promifisy(jwt.verify);
+    try {
+        const [userInfo]  = await jwtVerify(req.token, "secretKey");
 
-            const _id = myProfile.id;
-            const user = { email: myProfile.email, password: myProfile.password, firstName: myProfile.firstName, lastName: myProfile.lastName }
+        const myProfile = await userServices.findUserByFilter(userInfo.user.email, "email");
 
-            const chatsId = myProfile.chatsId[0];
+        const _id = myProfile.id;
+        const user = { email: myProfile.email, password: myProfile.password, firstName: myProfile.firstName, lastName: myProfile.lastName }
 
-            const chatsWithIds = await chatServices.findChatByFilter(chatsId, "id");
-            for (item of chatsWithIds.membersId) {
-                if (item != myProfile.id) {
-                    const user = await userServices.findUserByFilter(item, "id");
-                    chatsWithIds.name = user.firstName + " " + user.lastName;
-                }
-            }
-            chatsWithIds.save();
+        const chatsId = myProfile.chatsId;
 
-            let query = "";
-            if(chatsWithIds.messagesId.length > 0){
-                chatsWithIds.messagesId.forEach(element => {
-                    if(chatsWithIds.messagesId[chatsWithIds.membersId.length -1] == element){
-                        query += `{_id:${element}}`
-                    }
-                    else{
-                        query += `{_id:${element}},`
-                    }
-                });
-                console.log(query);
-            
-                Message.find( { $or:[ query]},(err,msgs) => {
-                    if(err){
-                        console.log(err);
-                    }
-                    const chats = {_id: chatsWithIds._id,type:chatsWithIds.type,membersId: chatsWithIds.membersId, name: chatsWithIds.name,messages:msgs}
+        const chatsWithIds = await chatServices.findChatsByFilter(chatsId,"id");
 
-                    response = {
-                        resultCode: 0,
-                        data: { user, _id, chats }
-                    };
-        
-                    res.status(200).json(response);
-                })
-            }  
-            else{
-                const chats = {_id: chatsWithIds._id,type:chatsWithIds.type,membersId: chatsWithIds.membersId, name: chatsWithIds.name,messages:[]}
-                response = {
-                    resultCode: 0,
-                    data: { user, _id, chats }
-                };
-    
-                res.status(200).json(response);
+        const chats = [];
+        const newChat = {};
+        if (chatsWithIds) {
+            for (let chat of chatsWithIds) {
                 
+                for (let item of chat.membersId) {
+                    if (item !== myProfile.id) {
+                        const user = await userServices.findUserByFilter(item, "id");
+                        newChat.name = user.firstName + " " + user.lastName;
+                        break;
+                    }
+                }
+
+                const users = await userServices.findUsersByFilter(chat.membersId,"id");
+
+                newChat.members = users.map((user => `${user.firstName}" "${user.lastName}`))
+                newChat.messages = await messageServices.findMessagesByFilter(chat.messagesId,"id"); 
+                newChat.type = chat.type;
+                newChat._id = chat._id;
+
+                chats.push(newChat);
             }
         }
-    });
+
+        response = {
+            resultCode: 0,
+            data: { user, _id, chats }
+        };
+
+        res.status(200).json(response);
+    }
+    catch (e) {
+        console.log(e);
+    }
 };
 
 module.exports = loginController;

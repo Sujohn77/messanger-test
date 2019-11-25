@@ -27,12 +27,14 @@ export const UserAPI = {
 };
 
 export const ProfileAPI ={
-    
     addFriend(friendEmail,id){
         
         return instance.post("profile/add",{friendEmail,id}).then(returnData);
     },
     getUsers(firstName,lastName){
         return instance.post("profile/users",{firstName,lastName}).then(returnData);
+    },
+    clearChat(chatId){
+        return instance.post("profile/chat",{chatId}).then(returnData);
     }
 };
