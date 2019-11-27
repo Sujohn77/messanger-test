@@ -24,7 +24,9 @@ routes.post("/profile/add",profileController.addFriend);
 
 routes.post("/profile/users",profileController.getUserWithName);
 
-routes.post("/profile/chat",profileController.clearChatMessages);
+routes.post("/profile/chat/create/:name",verifyToken,profileController.createGroup);
+
+routes.post("/profile/chat/addMembers",verifyToken,profileController.addMembersToChat);
 
 // TEST ROUTES
 routes.get("/users", testController.get);

@@ -9,7 +9,7 @@ const getProfileId = (state) => {
 }
 
 const getDialogs = (state) => {
-    return state.profilePage.dialogs
+    return state.profilePage.chats
 }
 
 export const getLastMessage = createSelector([getDialogs],
@@ -32,4 +32,13 @@ export const getUserForSocket = createSelector([getProfileId,getProfileName],
     (id,name) => { 
         return {id, name};
    } 
+);
+
+
+export const getChatNamesUser = createSelector([getDialogs],
+    (dialogs) => {
+        
+        const chatNames = dialogs.map((chat) => chat.name);
+        return chatNames;
+    }
 );

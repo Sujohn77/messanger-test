@@ -1,13 +1,14 @@
 import React from "react";
 
 import SearchInput from "react-search-input";
-import Settings from "../Setting";
+import Settings from "./../Setting.jsx";
 import Grid from "@material-ui/core/Grid";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import AccountCircle from "@material-ui/core/SvgIcon/SvgIcon";
-import {Container, makeStyles} from "@material-ui/core";
-import {Row} from "reactstrap";
+import { Container, makeStyles } from "@material-ui/core";
+import { Row } from "reactstrap";
 import styled from "styled-components";
+
+import logoUser from "./../../assets/imgs/logoUser.png";
+import logoGroup from "./../../assets/imgs/logoGroup.png";
 
 const StyledSearchUsers = styled.div`
     padding: 8px;
@@ -27,32 +28,47 @@ const StyledSearchUsers = styled.div`
         
         height:30px;
         &:hover {
-            cursor:pointer,
-            background:lightgrey;
-            transition:.3s all;
+            cursor:pointer
+            background:lightgrey
+            transition:.3s all
         }
     }
 `
-
+const StyledDialog = styled.div`
+    height: 55px
+    display: flex
+    align-items: center
+    border-top: none
+    cursor:pointer
+    &:hover{
+        background:lightgrey
+        transition:.3s all
+    }
+`
 const useStyles = makeStyles(theme => ({
     dialogs: {
         background: "#fff",
         height: "100%",
         minWidth: "300px",
-        padding: "8px"
     },
     dialog: {
         height: "55px",
         display: "flex",
         alignItems: "center",
-        padding: "0 10px",
         borderTop: "none",
-        marginBottom: "7px",
+    },
+    activeDialog: {
+        height: "55px",
+        display: "flex",
+        alignItems: "center",
+        borderTop: "none",
+
+        background: "#5682a3"
     },
     dialogDetails: {
         display: "flex",
         flexDirection: "column",
-        justifyContent: "space-around",
+        justifyContent: "center",
         height: "100%",
         padding: "0 10px"
     },
@@ -60,33 +76,46 @@ const useStyles = makeStyles(theme => ({
         fontSize: "15px"
     },
     search: {
-        marginBottom: "10px"
+        margin: "20px 0"
     },
 }));
 
-export const SideBar = ({logout, addFriend, searchItems, chats,openSettings,handleSearch}) => {
+export const SideBar = ({ logout, setActiveChat, activeChat, addFriend, searchItems, chats, openSettings, handleSearch }) => {
     const classes = useStyles();
-    
-    const searchElements = searchItems &&  
+
+    const searchElements = searchItems &&
         searchItems.map((item) => <div key={item.id}>
+            <div>{item.firstName + " " + item.lastName}</div>
             <div>{item.email}</div>
-            <button onClick={() => {addFriend(item.email)}}>Add</button>
+            <button onClick={() => { addFriend(item.email) }}>Add</button>
         </div>);
-    
-    
-    const userChats = chats && chats.map((item) =>
-        <Grid key={item._id} className={classes.dialog}>
-            <InputAdornment position="start">
-                <AccountCircle fontSize="large"/>
-            </InputAdornment>
+
+
+    const userChats = chats && chats.map((item) => {
+        
+         if(activeChat === item){
+             return <StyledDialog key={item._id} className={classes.activeDialog} onClick={() => setActiveChat(item)}>
+            <img src={(item.type === "group")?logoGroup:logoUser} alt="logo-user" width="45" height="45" />
             <Container className={classes.dialogDetails}>
-                <Row  row>{item.name}</Row>
-                <Row  row className={classes.messageText}>{item.lastMessage}</Row>
+                <Row row>{item.name}</Row>
+                <Row row className={classes.messageText}>{item.lastMessage}</Row>
             </Container>
-        </Grid>);
+        </StyledDialog>
+        }
+        else{
+            return <StyledDialog key={item._id} className={classes.dialog} onClick={() => setActiveChat(item)}>
+            <img src={(item.type === "group")?logoGroup:logoUser} alt="logo-user" width="45" height="45" />
+            <Container className={classes.dialogDetails}>
+                <Row row>{item.name}</Row>
+                <Row row className={classes.messageText}>{item.lastMessage}</Row>
+            </Container>
+        </StyledDialog>
+        }
+  
+    });
 
     return <>
-        {openSettings && <Settings logout={logout}/>}
+        {openSettings && <Settings logout={logout} />}
 
         <Grid className={classes.dialogs} xs="3" item>
             <SearchInput list="users" className={classes.search} onChange={handleSearch} />

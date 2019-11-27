@@ -1,5 +1,6 @@
 //LIBRARIES
 const jwt = require("jsonwebtoken");
+const promifisy = require("./../utils/promisify");
 //MODELS
 const User = require("../models/user");
 const Chat = require("../models/chat");
@@ -12,60 +13,97 @@ let response = require("./../response");
 
 const profileController = {};
 
+const verify = promifisy(jwt.verify);
+
+Array.prototype.forEach = async function asyncForEach(array, callback) {
+    for (let index = 0; index < array.length; index++) {
+      await callback(array[index], index, array);
+    }
+  }
+
+profileController.addMembersToChat = async (req, res) => {
+    const {userEmails,chatId} = req.body;
+    const [profile] = await verify(req.token, "secretKey");
+
+    if (profile) {
+        const users = await userServices.findUsersByFilter(userEmails,"email");
+
+        const membersId = users.map((user) => user.id);
+
+        
+        membersId.forEach((userId)=>{
+            await userServices.updateChatsUser(userId,chatId)
+        })
+        
+        const err = await chatServices.UpdateMembers(profile.user._id, chatId, membersId);
+        
+        if(!err){
+            response = {
+                data:{},
+                resultCode:0
+            }
+
+            res.status(200).json(response);
+        }
+    }
+};
+
 profileController.createGroup = async (req, res) => {
     const nameGroup = req.params.name;
-    const token = req.token;
+    const [profile] = await verify(req.token, "secretKey");
 
-    console.log("bearerHeader " + token);
-    console.log("nameGroup " + nameGroup);
+    if (profile) {
+        try {
+            // CHECK ON EXISTING A CHAT WITH THE SAME NAME
 
-    jwt.verify(token, "secretKey", (err, user) => {
-        if (err) {
-            response = {
-                resultCode: 1,
-                data: {},
-                message: "Failed verify user token"
-            };
-            res.status(400).json(response);
-        }
+            const chats = await chatServices.findChatsByFilter(profile.user._id, "userId");
 
-        Chat.findOne({ nameGroup }, (err, group) => {
-            if (err) {
+            let allowCreateChat = 0;
+            chats.forEach((chat) => {
+
+                if (chat.name == nameGroup && chat.type == "group") {
+                    allowCreateChat++
+                }
+            });
+
+            if (allowCreateChat < 1) {
+                const chat = await chatServices.createChat(profile.user, "group", nameGroup);
+
+                if (chat) {
+                    await userServices.updateChatsUser(profile.user._id, chat._id);
+
+
+                    response = {
+                        resultCode: 0,
+                        data: { chat },
+                    }
+
+                    res.status(200).json(response)
+                }
+            }
+            else {
                 response = {
                     resultCode: 1,
                     data: {},
-                    message: "Bad Request"
-                };
-                res.status(400).json(response);
-            }
+                    message: "Group with the same name already exists"
+                }
 
-            if (group === null) {
-                Chat.create({ name: nameGroup, members: [user.name], messages: [], emailOwner: user.email }, (err) => {
-                    if (err) {
-                        response = {
-                            resultCode: 1,
-                            data: {},
-                            message: "Bad Request"
-                        };
-                        res.sendStatus(400).json(response);
-                    }
-                });
-                response = {
-                    resultCode: 0,
-                    data: {},
-                };
-                res.status(200).json(response);
+                res.status(200).json(response)
             }
-        });
-    });
+        }
+        catch (e) {
+            console.log(e.message)
+        }
+    }
 };
-profileController.clearChatMessages = async(req,res) => {
+profileController.clearChatMessages = async (req, res) => {
     const { chatId } = req.body;
 
-    if(chatId){
-        const {errChat} = await chatServices.findByIdAndUpdate(chatId);
-        const {errMessage} = await messageServices.deleteByChatId(chatId);
-        if(!errChat && !errMessage){
+    if (chatId) {
+        const { errChat } = await chatServices.findByIdAndUpdate(chatId);
+        const { errMessage } = await messageServices.deleteByChatId(chatId);
+
+        if (!errChat && !errMessage) {
             response = {
                 resultCode: 0,
                 data: {},
@@ -102,23 +140,32 @@ profileController.addFriend = async (req, res) => {
 
             if (chat == null) {
                 return Chat.create({ type: "dialog", membersId: [myProfile.id, friendProfile.id], messagesId: [] }, async (err, chat) => {
-
                     if (err) {
                         console.log(err);
                         return false;
                     }
-
+                    // ADD CHAT ID TO MY LIST OF CHATS ID
                     myProfile.chatsId = Array.from(new Set([...myProfile.chatsId, chat.id]));
+                    // ADD FRIEND TO FRIEND LIST
+                    myProfile.friendsId = Array.from(new Set([...myProfile.friendsId, friendProfile.id]));
                     await myProfile.save();
 
+                    // ADD CHAT ID TO FRIEND'S LIST OF CHATS ID
                     friendProfile.chatsId = Array.from(new Set([...friendProfile.chatsId, chat.id]));
+                    // ADD TO FRIEND LIST ME
+                    friendProfile.friendsId = Array.from(new Set([...friendProfile.friendsId, myProfile.id]));
                     await friendProfile.save();
-                    
-                    const dialogNewFriend = { chatName: friendProfile.firstName + " " + friendProfile.lastName, messages: [] }
+
+                    const dialogNewFriend = { name: friendProfile.firstName + " " + friendProfile.lastName, messages: [] }
+
+                    const friendList = await userServices.getFriends(myProfile.friendsId || []);
+                    const newFriendList = friendList.map((user) =>{
+                        return {fullName: user.firstName + " " + user.lastName,email:user.email,_id:user.id}
+                    });
 
                     response = {
                         resultCode: 0,
-                        data: { dialogNewFriend }
+                        data: { dialogNewFriend, friendList:newFriendList }
                     };
 
                     res.status(200).json(response);

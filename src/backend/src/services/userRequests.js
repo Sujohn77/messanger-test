@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const chatServices = require("./chatRequests");
 const userServices = {};
 
 userServices.findUserByFilter = (filterValue,filterName) => {
@@ -33,6 +34,16 @@ userServices.findUserByFilter = (filterValue,filterName) => {
     }
 }
 
+userServices.getUserChats = (id) => {
+    return User.findById(id,async(err,user) => {
+        if(err){
+            console.log(err);
+        }
+        return user;
+        
+    })
+}
+
 userServices.findUsersByFilter = (filterValue,filterName) => {
     switch(filterName){
         case "id": 
@@ -42,6 +53,15 @@ userServices.findUsersByFilter = (filterValue,filterName) => {
                 }
                 else {
                     return user;
+                }
+            });
+        case "email": 
+            return User.find({ email: { $in: filterValue }},(err,users) =>{
+                if(err){
+                    console.log(err);
+                }
+                else {
+                    return users;
                 }
             });
             default:
@@ -57,8 +77,16 @@ userServices.findUsersByFilter = (filterValue,filterName) => {
 }
 
 userServices.updateChatsUser = (id,chatId) => {
-    return User.findOneAndUpdate(id, {$push: {"chatsId": chatId}}, {useFindAndModify: false});
+    return User.updateOne({_id:id}, {$push: {chatsId: chatId}}, {useFindAndModify: false});
 }
 
+userServices.getFriends = (friendsId) => {
+    return User.find({"_id": { $in:friendsId}},(err,users)=>{
+        if(err){
+            console.log(err)
+        }
+        return users;
+    });
+}
 
 module.exports = userServices;

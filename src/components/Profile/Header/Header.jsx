@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import {Burger} from "./Burger";
+import {Burger} from "./Burger.jsx";
 
 const StyledHeader = styled.h2`
     margin: 1px 4rem 0

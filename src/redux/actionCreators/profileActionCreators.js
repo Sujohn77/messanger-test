@@ -5,9 +5,14 @@ export const setSearchUsers = (users) => ({
     payload: users
 });
 
-export const addNewFriend = (name) => ({
+export const updateChats = (chat) => ({
+    type: consts.UPDATE_CHATS,
+    payload: chat
+});
+
+export const updateFriendList = (friendList) => ({
     type: consts.ADD_FRIEND,
-    payload: name
+    payload: friendList
 });
 
 export const setProfileData = (data) => ({
@@ -20,4 +25,17 @@ export const clearMessagesChat = (chatId) => ({
     payload: chatId
 });
 
+export const setShowGroupSettings = (isShow) => ({
+    type: consts.SET_SHOW_SETTINGS_GROUP,
+    payload: isShow
+});
 
+export const setShowGroupCreate = (isShow) => ({
+    type: consts.SET_SHOW_ADD_GROUP,
+    payload: isShow
+});
+
+export const updateChatMembers = ({chatName, members}) => ({
+    type: consts.SET_SHOW_ADD_GROUP,
+    payload: {chatName, members}
+});

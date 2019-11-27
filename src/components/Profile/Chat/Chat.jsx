@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-// import {Grid} from "./../../common/Grid.jsx";
+import { CreateGroupContainer } from "../../../containers/CreateGroupContainer.jsx";
+import menu from "./../../../assets/imgs/menu.png";
 
 const StyledInput = styled.input`
     height: 30px
@@ -29,7 +30,7 @@ const StyledButton = styled.button`
     background: #5682a3
     color:  white
     font-size: 1em
-    width:100px
+    min-width:100px
     padding: 0.25em 1em
     border:none
     border-radius: 3px
@@ -61,8 +62,10 @@ const FriendMessage = styled.div`
     }
 `;
 
-export const Chat = ({ sendMessage, chat, clearAll, user }) => {
+export const Chat = ({sendMessage,setShowGroupCreate, setShowGroupSettings, chat, clearAll, user }) => {
+    
     const [message, setMessage] = useState("")
+
     const messages = chat && chat.messages.map((msg) => {
         if (msg.sender === user.name) {
             return <MyMessage key={msg.id}><div>{msg.text}</div></MyMessage>
@@ -72,10 +75,21 @@ export const Chat = ({ sendMessage, chat, clearAll, user }) => {
         }
     });
 
+    const openGroup = () => {
+        
+        if(chat.type === "group"){
+            setShowGroupSettings(true)
+        }
+    }
+
     return <Container>
+        <CreateGroupContainer setShowGroupCreate={setShowGroupCreate} chat={chat}/>
+
         <StyledFlexMax>
             <StyledDiv>
                 <StyledButton onClick={() => clearAll(chat._id)}>Clear</StyledButton>
+                <StyledButton onClick={() => setShowGroupCreate(true)}>Create group</StyledButton>
+                <img src={menu} alt="menu" onClick={openGroup}/>
                 {messages}
             </StyledDiv>
         </StyledFlexMax>
@@ -84,6 +98,7 @@ export const Chat = ({ sendMessage, chat, clearAll, user }) => {
             <StyledInput onChange={(e) => setMessage(e.target.value)} />
             <StyledButton onClick={() => sendMessage(message)}>Send</StyledButton>
         </StyledFlex>
+
     </Container>
 };
 

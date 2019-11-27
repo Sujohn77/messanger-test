@@ -1,5 +1,5 @@
 import React from 'react';
-import "./../assets/css/animate-input.css";
+import "./../assets/css/animate-input.scss";
 
 const FormsControl = ({meta,children}) =>{
     let hasError = (meta.error && meta.touched);

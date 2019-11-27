@@ -36,5 +36,13 @@ export const ProfileAPI ={
     },
     clearChat(chatId){
         return instance.post("profile/chat",{chatId}).then(returnData);
+    },
+    createChat(name,token){
+        axios.defaults.headers.post['authorization'] = token;
+        return axios.post("http://localhost:3001/profile/chat/create/"+name).then(returnData);
+    },
+    addMembers(userEmails,chatId,token){
+        axios.defaults.headers.post['authorization'] = token;
+        return axios.post("http://localhost:3001/profile/chat/addMembers",{userEmails,chatId}).then(returnData);
     }
 };
