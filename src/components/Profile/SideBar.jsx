@@ -1,7 +1,7 @@
 import React from "react";
 
 import SearchInput from "react-search-input";
-import Settings from "./../Setting.jsx";
+import Settings from "../Setting.jsx";
 import Grid from "@material-ui/core/Grid";
 import { Container, makeStyles } from "@material-ui/core";
 import { Row } from "reactstrap";
@@ -80,7 +80,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const SideBar = ({ logout, setActiveChat, activeChat, addFriend, searchItems, chats, openSettings, handleSearch }) => {
+export const Sidebar = ({ logout, setActiveChat, activeChat, addFriend, searchItems, chats, openSettings, handleSearch }) => {
     const classes = useStyles();
 
     const searchElements = searchItems &&
@@ -98,7 +98,7 @@ export const SideBar = ({ logout, setActiveChat, activeChat, addFriend, searchIt
             <img src={(item.type === "group")?logoGroup:logoUser} alt="logo-user" width="45" height="45" />
             <Container className={classes.dialogDetails}>
                 <Row row>{item.name}</Row>
-                <Row row className={classes.messageText}>{item.lastMessage}</Row>
+                <Row row className={classes.messageText}>{item.messages.length > 0 && item.messages[item.messages.length-1].text}</Row>
             </Container>
         </StyledDialog>
         }
@@ -107,7 +107,7 @@ export const SideBar = ({ logout, setActiveChat, activeChat, addFriend, searchIt
             <img src={(item.type === "group")?logoGroup:logoUser} alt="logo-user" width="45" height="45" />
             <Container className={classes.dialogDetails}>
                 <Row row>{item.name}</Row>
-                <Row row className={classes.messageText}>{item.lastMessage}</Row>
+                <Row row className={classes.messageText}>{item.messages.length > 0 && item.messages[item.messages.length-1].text}</Row>
             </Container>
         </StyledDialog>
         }

@@ -5,7 +5,12 @@ export const setSearchUsers = (users) => ({
     payload: users
 });
 
-export const updateChats = (chat) => ({
+export const updateChats = (chats) => ({
+    type: consts.UPDATE_CHATS,
+    payload: chats
+});
+
+export const addChat = (chat) => ({
     type: consts.UPDATE_CHATS,
     payload: chat
 });

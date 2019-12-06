@@ -28,6 +28,8 @@ routes.post("/profile/chat/create/:name",verifyToken,profileController.createGro
 
 routes.post("/profile/chat/addMembers",verifyToken,profileController.addMembersToChat);
 
+routes.delete("/profile/chat/:chatId",profileController.clearChatMessages);
+
 // TEST ROUTES
 routes.get("/users", testController.get);
 

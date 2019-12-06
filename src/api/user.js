@@ -35,7 +35,7 @@ export const ProfileAPI ={
         return instance.post("profile/users",{firstName,lastName}).then(returnData);
     },
     clearChat(chatId){
-        return instance.post("profile/chat",{chatId}).then(returnData);
+        return instance.delete("profile/chat/"+chatId).then(returnData);
     },
     createChat(name,token){
         axios.defaults.headers.post['authorization'] = token;

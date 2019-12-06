@@ -15,12 +15,6 @@ const profileController = {};
 
 const verify = promifisy(jwt.verify);
 
-Array.prototype.forEach = async function asyncForEach(array, callback) {
-    for (let index = 0; index < array.length; index++) {
-      await callback(array[index], index, array);
-    }
-  }
-
 profileController.addMembersToChat = async (req, res) => {
     const {userEmails,chatId} = req.body;
     const [profile] = await verify(req.token, "secretKey");
@@ -30,21 +24,18 @@ profileController.addMembersToChat = async (req, res) => {
 
         const membersId = users.map((user) => user.id);
 
-        
-        membersId.forEach((userId)=>{
-            await userServices.updateChatsUser(userId,chatId)
-        })
-        
-        const err = await chatServices.UpdateMembers(profile.user._id, chatId, membersId);
-        
-        if(!err){
-            response = {
-                data:{},
-                resultCode:0
-            }
-
-            res.status(200).json(response);
+        for (let index = 0; index < membersId.length; index++) {
+            await userServices.updateChatsUser(membersId[index],chatId)
         }
+        
+        await chatServices.UpdateMembers(profile.user._id, chatId, membersId);
+        
+        response = {
+            data:{},
+            resultCode:0
+        }
+
+        res.status(200).json(response);
     }
 };
 
@@ -97,7 +88,7 @@ profileController.createGroup = async (req, res) => {
     }
 };
 profileController.clearChatMessages = async (req, res) => {
-    const { chatId } = req.body;
+    const  chatId  = req.params.chatId;
 
     if (chatId) {
         const { errChat } = await chatServices.findByIdAndUpdate(chatId);
@@ -139,7 +130,7 @@ profileController.addFriend = async (req, res) => {
             const chat = await chatServices.findChatByFilter([myProfile.id, friendProfile.id], "members");
 
             if (chat == null) {
-                return Chat.create({ type: "dialog", membersId: [myProfile.id, friendProfile.id], messagesId: [] }, async (err, chat) => {
+                return Chat.create({ type: "dialog", membersId: [myProfile.id, friendProfile.id], messagesId: []}, async (err, chat) => {
                     if (err) {
                         console.log(err);
                         return false;

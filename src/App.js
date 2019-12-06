@@ -8,6 +8,8 @@ import RegisterContainer from "./containers/RegisterContainer.jsx";
 import {connect} from 'react-redux';
 import {authThunk} from "./redux/middleWares/userThunks";
 
+import "./App.scss"
+
 class App extends Component {
     componentDidMount() {
         this.props.authThunk(); // CHECK ON AUTHORISING

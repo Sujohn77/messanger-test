@@ -31,11 +31,11 @@ chatServices.findChatsByFilter = (filterValue, filterName) => {
                 return chat;
             });
         case "id":
-            return Chat.find({ _id: { $in: filterValue } }, (err, chat) => {
+            return Chat.find({ _id: { $in: filterValue } }, (err, chats) => {
                 if (err) {
                     console.log(err);
                 }
-                return chat;
+                return chats;
             });
         case "userId":
             return Chat.find({ userId: filterValue  }, (err, chats) => {

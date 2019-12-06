@@ -22,15 +22,7 @@ loginController.login = async (req, res) => {
             console.log(err)
         }
 
-        if (user === null) {
-            response = {
-                resultCode: 1,
-                data: {},
-                message: "Email or password is wrong"
-            };
-            res.status(400).json(response);
-        }
-        else {
+        if (user) {
             jwt.sign({ user: user }, "secretKey", (err, token) => {
                 if (err) {
                     console.log(err);
@@ -43,8 +35,14 @@ loginController.login = async (req, res) => {
                 res.status(200).json(response)
             });
         }
-
-
+        else {
+            response = {
+                resultCode: 1,
+                data: {},
+                message: "Email or password is wrong"
+            };
+            res.status(400).json(response);
+        }
     });
 };
 
@@ -61,8 +59,11 @@ loginController.checkAuth = async (req, res) => {
         const newFriendList = friendList.map((user) =>{
             return {fullName: user.firstName + " " + user.lastName,email:user.email,_id:user.id}
         });
-        const chatsId = myProfile.chatsId;
-
+        const chatsId = [];
+        
+        for(let i = 0;i < myProfile.chatsId.length;i++){
+            chatsId[i] = myProfile.chatsId[i];
+        }
         const chatsWithIds = await chatServices.findChatsByFilter(chatsId,"id");
 
         const chats = [];

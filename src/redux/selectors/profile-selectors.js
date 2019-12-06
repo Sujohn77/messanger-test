@@ -12,12 +12,6 @@ const getDialogs = (state) => {
     return state.profilePage.chats
 }
 
-export const getLastMessage = createSelector([getDialogs],
-    (dialogs) => { 
-        return dialogs && dialogs[dialogs.length - 1];
-    }
-);
-
 export const getFilteredSearchUsers = createSelector([getSearchUsers,getProfileId],
      (searchUsers,id) => { 
          return searchUsers.filter((item) => item._id !== id && item)

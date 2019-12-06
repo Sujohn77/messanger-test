@@ -6,7 +6,7 @@ import Grid from "@material-ui/core/Grid";
 import styled from "styled-components";
 
 import { Header } from "./Header/Header.jsx";
-import { SideBar } from "./SideBar.jsx";
+import { SidebarContainer } from "./../../containers/SidebarContainer.jsx";
 import { Chat } from "./Chat/Chat.jsx";
 
 const StyledDiv = styled.div`
@@ -31,7 +31,8 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const Profile = ({ logout,setShowGroupCreate,setShowGroupSettings, setActiveChat, addFriend, clearAll, user, sendMessage, activeChat, chats = [], searchItems, handleSearch }) => {
+export const Profile = ({setShowGroupCreate,setShowGroupSettings, clearAll, user, sendMessage, 
+                        activeChat,setActiveChat,handleSearch }) => {
     const classes = useStyles();
 
     const [openSettings, setOpenSettings] = useState(false);
@@ -45,12 +46,9 @@ export const Profile = ({ logout,setShowGroupCreate,setShowGroupSettings, setAct
                             setOpenSettings={setOpenSettings} />
                     </Grid>
                     <Grid className={classes.mainContent}>
-                        <SideBar addFriend={addFriend}
+                        <SidebarContainer 
                             setActiveChat={setActiveChat}
                             activeChat={activeChat}
-                            logout={logout}
-                            searchItems={searchItems}
-                            chats={chats}
                             openSettings={openSettings}
                             handleSearch={handleSearch} />
                         <Chat clearAll={clearAll}

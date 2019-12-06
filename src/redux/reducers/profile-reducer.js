@@ -17,11 +17,16 @@ export const profileReducer = (state = initialState,action ) => {
                 searchUsers: action.payload
             }
         }
-        case consts.UPDATE_CHATS: {
-            debugger
+        case consts.ADD_CHAT: {
             return {
                 ...state,
                 chats: [...state.chats,action.payload]
+            }
+        }
+        case consts.UPDATE_CHATS: {
+            return {
+                ...state,
+                chats: action.payload
             }
         }
         case consts.ADD_FRIEND: {

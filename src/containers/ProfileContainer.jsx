@@ -6,9 +6,9 @@ import { compose } from "redux";
 import { logout } from "./../redux/actionCreators/loginActionCreators";
 import { addFriend, clearAll, searchUsers} from "./../redux/middleWares/userThunks";
 import { setAuth } from "./../redux/actionCreators/authActionCreators";
-import { setShowGroupCreate, setShowGroupSettings } from "./../redux/actionCreators/profileActionCreators";
+import { setShowGroupCreate, updateChats, setShowGroupSettings } from "./../redux/actionCreators/profileActionCreators";
 
-import { getFilteredSearchUsers, getLastMessage, getUserForSocket} from "./../redux/selectors/profile-selectors";
+import {getUserForSocket} from "./../redux/selectors/profile-selectors";
 import { MESSAGE_SENT, MESSAGE_RECIEVED } from "./../Events"
 
 import io from "socket.io-client"
@@ -29,38 +29,39 @@ class ProfileContainer extends React.Component {
         const socket = io(socketUrl);
         this.setState({socket});
         if(this.state.activeChat){
-            socket.on(`${MESSAGE_RECIEVED}-${this.state.activeChat._id}`, this.addMessageToChat(this.state.activeChat._id))
+            for(let i =0;i<this.state.chats.length;i++){
+                socket.on(`${MESSAGE_RECIEVED}-${this.props.chats[i]._id}`, this.addMessageToChat(this.props.chats[i]._id))
+            }
         }      
     }
-
     setActiveChat(chat){
         this.setState({activeChat:chat})
     }
 
     addMessageToChat (chatId) {
-        return message => {
-            const newChats = this.state.chats.map((chat) => {
-                if (this.state.activeChat._id === chatId)
-                    this.state.activeChat.messages.push(message)
+        return message => {   
+            const newChats = this.props.chats.map((chat) => {
+                if(chat._id === chatId){
+                    chat.messages.push(message)
+                }
                 return chat
             })
-            
-            this.setState({chats: newChats })
+            this.props.updateChats(newChats);
         }
     }
 
     sendMessage(value)  {
         const {socket} = this.state;
         const message = { text: value, sender: this.props.user.name,chatId:this.state.activeChat._id};
-        debugger
+        
         if(value){
-            const newChats = this.state.chats.map((chat) => {
-                if (this.state.activeChat._id === chat._id){
-                    this.state.activeChat.messages.push(message)
+            const newChats = this.props.chats.map((chat) => {
+                if(chat._id === this.state.activeChat._id){
+                    chat.messages.push(message)
                 }
                 return chat
             })
-            this.setState({chats: newChats })
+            this.props.updateChats(newChats);
             
             socket.emit(MESSAGE_SENT, { text: value, chatId: this.state.activeChat._id,sender: this.props.user.name});
         }
@@ -77,7 +78,6 @@ class ProfileContainer extends React.Component {
         setAuth(false);
     };
     render() {
-        
         if(!this.props.chats)
             return <Preloader/>
             
@@ -89,15 +89,15 @@ class ProfileContainer extends React.Component {
     }
 
 };
+
 const mapStateToProps = state => {
     return {
-        searchItems: getFilteredSearchUsers(state),
-        chats: state.profilePage.chats,
-        lastMessage: getLastMessage(state),
         user: getUserForSocket(state),
+        chats: state.profilePage.chats,
     }
 };
+
 export default compose(
     withAuthRedirect,
-    connect(mapStateToProps, { logout, clearAll, setShowGroupCreate, setShowGroupSettings, addFriend, searchUsers, setAuth })
+    connect(mapStateToProps, { updateChats, logout, clearAll, setShowGroupCreate, setShowGroupSettings, addFriend, searchUsers, setAuth })
 )(ProfileContainer);

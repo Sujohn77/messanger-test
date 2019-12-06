@@ -4,7 +4,7 @@ import store from "./../store"
 import { UserAPI, ProfileAPI } from "../../api/user";
 
 import { setRegister, setTrialRegister, verify } from "../actionCreators/registerActionCreators";
-import { updateChatMembers, updateChats,updateFriendList, setSearchUsers, setProfileData, clearMessagesChat, setShowGroupSettings, setShowGroupCreate } from "../actionCreators/profileActionCreators";
+import { updateChatMembers,updateFriendList, setSearchUsers, setProfileData, clearMessagesChat, setShowGroupSettings, setShowGroupCreate, addChat } from "../actionCreators/profileActionCreators";
 import { login } from "../actionCreators/loginActionCreators";
 import { setAuth } from "../actionCreators/authActionCreators";
 
@@ -68,6 +68,7 @@ export const setLogin = ({ email, password }) => async (dispatch) => {
 
 export const clearAll = (chatId) => async (dispatch) => {
     try {
+        debugger
         const response = await ProfileAPI.clearChat(chatId);
         
         if (response.resultCode === 0) {
@@ -99,7 +100,7 @@ export const addFriend = (friendEmail) => async (dispatch) => {
         const response = await ProfileAPI.addFriend(friendEmail, state.profilePage.id);
         
         if (response.resultCode === 0) {
-            dispatch(updateChats(response.data.dialogNewFriend));
+            dispatch(addChat(response.data.dialogNewFriend));
             dispatch(updateFriendList(response.data.friendList));
         }
     } catch (e) {
@@ -152,7 +153,7 @@ export const createGroup = (chatName) => async(dispatch) => {
         
         if(response.resultCode === 0){
             debugger
-            dispatch(updateChats(response.data.chat))
+            dispatch(addChat(response.data.chat))
             dispatch(setShowGroupSettings(true))
             dispatch(setShowGroupCreate(false))
         }

@@ -9,10 +9,9 @@ import {getChatNamesUser} from "./../redux/selectors/profile-selectors";
 import { ModalCreateGroup } from "../common/ModalCreateGroup.jsx";
 import { ModalSettingsChat } from "../common/ModalSettingsChat.jsx";
 
-const CreateGroup = ({chatNames, createGroup,addMembers, showCreateGroup,setShowGroupSettings, showSettingsGroup, setShowGroupCreate, users,chat }) => {
-
+const CreateGroup = ({chats, createGroup,addMembers, showCreateGroup,setShowGroupSettings, showSettingsGroup, setShowGroupCreate, users,activeChat }) => {
     const [addedUsers, setAddedUsers] = useState([]);
-    const [groupName, setGroupName] = useState("");
+    
     const closeModal = () => {
         stopSubmit("createGroup");
         setShowGroupCreate(false);
@@ -20,45 +19,32 @@ const CreateGroup = ({chatNames, createGroup,addMembers, showCreateGroup,setShow
 
     const addMembersToChat = () => {
         debugger
-        let actualGroupName;
-        if(chatNames.includes(groupName) && groupName !== ""){
-            // SET NAME OF NEW CREATED CHAT
-            actualGroupName = groupName
-        }
-        else{
-            // SET NAME OF ACTIVE CHAT
-            actualGroupName = chat.name
-        }
-
         if (addedUsers.length > 0 ) {
-            addMembers(actualGroupName,addedUsers)
+            addMembers(chats[chats.length-1]._id,addedUsers)
         }
     }
 
     const createNewGroup =(values) => {
-        
         if(values && values.createGroup){
-           setGroupName(values.createGroup);
            createGroup(values.createGroup);
         }
     }
 
     const addUserToGroup = (user) => {
-        
+        debugger
         if(addedUsers.includes(user)){
             const newAddedUsers = addedUsers.filter((item)=>item !== user);
-            setAddedUsers(newAddedUsers);
+            setAddedUsers(newAddedUsers,activeChat._id);
         }
         else{
             const newAddedUsers = [...addedUsers,user];
             setAddedUsers(newAddedUsers);
-          
         }
-        
     }
 
     return <React.Fragment>
         {showCreateGroup && <ModalCreateGroup open={true} closeModal={closeModal} onSubmit={createNewGroup} />}
+
         {showSettingsGroup && <ModalSettingsChat  users={users}
                                 addedUsers={addedUsers}
                                 addUserToGroup={addUserToGroup}
@@ -69,12 +55,11 @@ const CreateGroup = ({chatNames, createGroup,addMembers, showCreateGroup,setShow
 }
 
 const mapStateToProps = (state) => {
-    
     return {
         users: state.profilePage.friendsList,
         showSettingsGroup: state.profilePage.showSettingsGroup,
         showCreateGroup: state.profilePage.showCreateGroup,
-        chatNames: getChatNamesUser(state)
+        chats: state.profilePage.chats
     }
 }
 
