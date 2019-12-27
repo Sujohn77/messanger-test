@@ -38,6 +38,7 @@ export const profileReducer = (state = initialState,action ) => {
         }
         case consts.SET_PROFILE_DATA: {
             
+        case consts.SET_PROFILE_DATA: {
             return {
                 ...state,
                id:action.payload.id,
