@@ -22,5 +22,7 @@
             ],
             "program": "${workspaceFolder}\\start"
         }
-    ]
+    ],
+    // npm sripts
+    "npm.enableScriptExplorer": true,
 }

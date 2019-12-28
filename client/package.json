@@ -8,7 +8,6 @@
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.0",
     "classnames": "^2.2.6",
-    "concurrently": "^5.0.2",
     "grunt": "^1.0.4",
     "gulp-scss": "^1.4.0",
     "lodash": "^4.17.15",
@@ -28,11 +27,9 @@
     "styled-components": "^4.4.1"
   },
   "scripts": {
-    "start": "npm start --prefix backend",
-    "server": "npm start --prefix backend",
-    "client": "npm start --prefix client",
-    "dev": "concurrently \"npm start --prefix backend\" \"npm start --prefix client\"",
-    "heroku-postbuild":"npm install --prefix client && npm run build --prefix client"
+    "start": "react-scripts start",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -65,4 +62,5 @@
     "redux-form": "^8.2.6",
     "redux-thunk": "^2.3.0"
   }
+
 }
