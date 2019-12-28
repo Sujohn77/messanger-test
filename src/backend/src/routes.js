@@ -28,7 +28,11 @@ routes.post("/profile/chat/create/:name",verifyToken,profileController.createGro
 
 routes.post("/profile/chat/addMembers",verifyToken,profileController.addMembersToChat);
 
+routes.post("/profile/chat:chatId/messages",profileController.getPortionMessages);
+
 routes.delete("/profile/chat/:chatId",profileController.clearChatMessages);
+
+routes.post("/profile/chat/position",profileController.saveScrollPositionChat);
 
 // TEST ROUTES
 routes.get("/users", testController.get);
@@ -38,5 +42,7 @@ routes.delete("/delete", testController.delete);
 routes.delete("/delete/:firstName", testController.deleteOne);
 
 routes.delete("/deleteDialogs", testController.clearDialogs);
+
+routes.delete("/deleteFriends", testController.deleteFriends);
 
 module.exports = routes;

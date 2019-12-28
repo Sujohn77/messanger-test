@@ -23,16 +23,68 @@ loginController.login = async (req, res) => {
         }
 
         if (user) {
-            jwt.sign({ user: user }, "secretKey", (err, token) => {
+            jwt.sign({ user: user }, "secretKey",async (err, token) => {
                 if (err) {
                     console.log(err);
                 }
-                response = {
-                    resultCode: 0,
-                    data: { user, token }
-                };
+                const myProfile = await userServices.findUserByFilter(email, "email");
+                const chatsWithIds = await chatServices.findChatsByFilter(user.chatsId,"id");
+                const chats = [];
+                let chatName;
 
-                res.status(200).json(response)
+                const friendList = await userServices.getFriends(myProfile.friendsId || []);
+                const newFriendList = friendList.map((user) =>{
+                    return {fullName: user.firstName + " " + user.lastName,email:user.email,_id:user.id}
+                });
+
+                if (chatsWithIds) {
+                    for (let chat of chatsWithIds) {
+                        if(chat.type === "dialog"){
+                            for (let item of chat.membersId) {
+                                if (item !== myProfile.id) {
+                                    const user = await userServices.findUserByFilter(item, "id");
+                                    if(user !== null){
+                                        chatName = user.firstName + " " + user.lastName;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        else{
+                            chatName = chat.name
+                        }
+                        const users = await userServices.findUsersByFilter(chat.membersId,"id");
+                        const messages = await messageServices.findMessagesByFilter(chat.messagesId,"id"); 
+                        const members = users.map((user => {
+                            if(user.lastName){
+                                return `${user.firstName}" "${user.lastName}`;
+                            }
+                            else{
+                                return user.firstName
+                            }
+                        }));
+        
+                        const newChat = Factory.chatCreator(chat._id,chat.type, members,messages,chatName,chat.position);
+        
+                        chats.push({
+                            _id:newChat._id,
+                            lastMessage:newChat.messages[messages.length-1],
+                            length:newChat.messages.length,
+                            name:newChat.name,
+                            type:newChat.type});
+                    }
+                    response = {
+                        resultCode: 0,
+                        data: { 
+                            user,
+                            _id:myProfile.id,
+                            chats,
+                            friendList:newFriendList, token
+                        }
+                    };
+            
+                    res.status(200).json(response);
+                }
             });
         }
         else {
@@ -52,52 +104,79 @@ loginController.checkAuth = async (req, res) => {
 
         const myProfile = await userServices.findUserByFilter(userInfo.user.email, "email");
 
-        const _id = myProfile.id;
+        if(myProfile){
+            const _id = myProfile.id;
 
-        const user = { email: myProfile.email, password: myProfile.password, firstName: myProfile.firstName, lastName: myProfile.lastName }
-        const friendList = await userServices.getFriends(myProfile.friendsId || []);
-        const newFriendList = friendList.map((user) =>{
-            return {fullName: user.firstName + " " + user.lastName,email:user.email,_id:user.id}
-        });
-        const chatsId = [];
-        
-        for(let i = 0;i < myProfile.chatsId.length;i++){
-            chatsId[i] = myProfile.chatsId[i];
-        }
-        const chatsWithIds = await chatServices.findChatsByFilter(chatsId,"id");
-
-        const chats = [];
-
-        let chatName;
-        if (chatsWithIds) {
-            for (let chat of chatsWithIds) {
-                if(chat.type === "dialog"){
-                    for (let item of chat.membersId) {
-                        if (item !== myProfile.id) {
-                            const user = await userServices.findUserByFilter(item, "id");
-                            chatName = user.firstName + " " + user.lastName;
-                            break;
-                        }
-                    }
+            const user = { email: myProfile.email, password: myProfile.password, firstName: myProfile.firstName, lastName: myProfile.lastName }
+            const friendList = await userServices.getFriends(myProfile.friendsId || []);
+            const newFriendList = friendList.map((user => {
+                if(user.lastName){
+                    return {fullName: user.firstName + " " + user.lastName,email:user.email,_id:user.id};
                 }
                 else{
-                    chatName = chat.name
+                    return {fullName: user.firstName,email:user.email,_id:user.id};
                 }
-                const users = await userServices.findUsersByFilter(chat.membersId,"id");
-                const messages = await messageServices.findMessagesByFilter(chat.messagesId,"id"); 
-                const members = users.map((user => `${user.firstName}" "${user.lastName}`));
-
-                const newChat = Factory.chatCreator(chat._id,chat.type, members,messages,chatName);
-
-                chats.push(newChat);
+            }));
+            const chatsId = [];
+            
+            for(let i = 0;i < myProfile.chatsId.length;i++){
+                chatsId[i] = myProfile.chatsId[i];
             }
-            response = {
-                resultCode: 0,
-                data: { user, _id, chats, friendList:newFriendList }
-            };
+            const chatsWithIds = await chatServices.findChatsByFilter(chatsId,"id");
     
-            res.status(200).json(response);
+            const chats = [];
+    
+            let chatName;
+            if (chatsWithIds) {
+                for (let chat of chatsWithIds) {
+                    if(chat.type === "dialog"){
+                        for (let item of chat.membersId) {
+                            if (item !== myProfile.id) {
+                                const user = await userServices.findUserByFilter(item, "id");
+                                if(user.lastName){
+                                    chatName = user.firstName + " " + user.lastName;
+                                }
+                                else{
+                                    chatName = user.firstName;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    else{
+                        chatName = chat.name
+                    }
+                    const users = await userServices.findUsersByFilter(chat.membersId,"id");
+                    const messages = await messageServices.findMessagesByFilter(chat.messagesId,"id"); 
+                    const members = users.map((user => {
+                        if(user.lastName){
+                            return `${user.firstName}" "${user.lastName}`;
+                        }
+                        else{
+                            return user.firstName
+                        }
+                    }));
+    
+                    const newChat = Factory.chatCreator(chat._id,chat.type, members,messages,chatName,chat.position);
+    
+                    chats.push({
+                        _id:newChat._id,
+                        lastMessage:newChat.messages[messages.length-1],
+                        length:newChat.messages.length,
+                        name:newChat.name,
+                        type:newChat.type,
+                        position:newChat.position
+                    });
+                }
+                response = {
+                    resultCode: 0,
+                    data: { user, _id, chats, friendList:newFriendList }
+                };
+        
+                res.status(200).json(response);
+            }
         }
+        
     }
     catch (e) {
         console.log(e);

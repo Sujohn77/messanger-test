@@ -22,4 +22,4 @@ const mapStateToProps = state => {
         chats: state.profilePage.chats,
     }
 };
-export const SidebarContainer = connect(mapStateToProps, {logout, addFriend, searchUsers })(Container)
+export const SidebarContainer = connect(mapStateToProps, { addFriend, searchUsers })(Container)

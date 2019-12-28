@@ -11,15 +11,18 @@ const useStyles = makeStyles(theme => ({
     form: {
         width: "100%", // Fix IE 11 issue.
         marginTop: theme.spacing(1),
-        overflow: "hidden"
+        overflow: "hidden",
+        maxWidth:"348px"
     },
     paper: {
         margin: theme.spacing(1),
-        marginTop: theme.spacing(-20),
+        marginTop: "-100px",
         display: "flex",
         border: "1px solid #e6e6e6",
-        height: "250px",
+        height: "244px",
         padding: "15px",
+        width:"348px",
+        
         background: "#fff",
         borderRadius: "4px",
         position: "relative",
@@ -31,7 +34,7 @@ const useStyles = makeStyles(theme => ({
         transform: "translate(0, 0px) scale(1)"
     },
     submit: {
-        marginTop: "calc(100% - 265px)",
+        marginTop: "-100px",
     },
     input: {
         width: "100%"

@@ -27,4 +27,5 @@ messageServices.findMessagesByFilter = (filterValue, filterName) => {
             });
     }
 }
+
 module.exports = messageServices;

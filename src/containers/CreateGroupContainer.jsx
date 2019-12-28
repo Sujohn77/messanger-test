@@ -18,7 +18,6 @@ const CreateGroup = ({chats, createGroup,addMembers, showCreateGroup,setShowGrou
     }
 
     const addMembersToChat = () => {
-        debugger
         if (addedUsers.length > 0 ) {
             addMembers(chats[chats.length-1]._id,addedUsers)
         }
@@ -31,7 +30,6 @@ const CreateGroup = ({chats, createGroup,addMembers, showCreateGroup,setShowGrou
     }
 
     const addUserToGroup = (user) => {
-        debugger
         if(addedUsers.includes(user)){
             const newAddedUsers = addedUsers.filter((item)=>item !== user);
             setAddedUsers(newAddedUsers,activeChat._id);

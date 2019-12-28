@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
         background: '#fff',
         borderRadius: '4px',
         height: "300px",
-        width: "364px",
+        width: "394px",
         flexDirection: 'column',
         overflow: "hidden"
     },

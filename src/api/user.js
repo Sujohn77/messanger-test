@@ -44,5 +44,11 @@ export const ProfileAPI ={
     addMembers(userEmails,chatId,token){
         axios.defaults.headers.post['authorization'] = token;
         return axios.post("http://localhost:3001/profile/chat/addMembers",{userEmails,chatId}).then(returnData);
+    },
+    getPortionMessages(chatId,startIndex,endIndex){
+        return instance.post("profile/chat"+chatId+"/messages",{startIndex,endIndex}).then(response => response.data);
+    },
+    saveChatPosition(chatId,position){
+        return instance.post("profile/chat/position",{chatId,position}).then(response => response.data);
     }
 };

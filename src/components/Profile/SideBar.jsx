@@ -1,7 +1,7 @@
 import React from "react";
 
 import SearchInput from "react-search-input";
-import Settings from "../Setting.jsx";
+import Settings from "./Setting.jsx";
 import Grid from "@material-ui/core/Grid";
 import { Container, makeStyles } from "@material-ui/core";
 import { Row } from "reactstrap";
@@ -25,8 +25,8 @@ const StyledSearchUsers = styled.div`
     div {
         display: flex;
         justify-content:space-between;
-        
         height:30px;
+        align-items:center;
         &:hover {
             cursor:pointer
             background:lightgrey
@@ -76,7 +76,7 @@ const useStyles = makeStyles(theme => ({
         fontSize: "15px"
     },
     search: {
-        margin: "20px 0"
+        margin: "20px 10px"
     },
 }));
 
@@ -85,8 +85,7 @@ export const Sidebar = ({ logout, setActiveChat, activeChat, addFriend, searchIt
 
     const searchElements = searchItems &&
         searchItems.map((item) => <div key={item.id}>
-            <div>{item.firstName + " " + item.lastName}</div>
-            <div>{item.email}</div>
+            <div title={item.email}>{item.firstName + " " + item.lastName}</div>
             <button onClick={() => { addFriend(item.email) }}>Add</button>
         </div>);
 
@@ -98,7 +97,7 @@ export const Sidebar = ({ logout, setActiveChat, activeChat, addFriend, searchIt
             <img src={(item.type === "group")?logoGroup:logoUser} alt="logo-user" width="45" height="45" />
             <Container className={classes.dialogDetails}>
                 <Row row>{item.name}</Row>
-                <Row row className={classes.messageText}>{item.messages.length > 0 && item.messages[item.messages.length-1].text}</Row>
+                {item.lastMessage && <Row  className={classes.messageText}>{item.lastMessage.text}</Row>}
             </Container>
         </StyledDialog>
         }
@@ -107,7 +106,7 @@ export const Sidebar = ({ logout, setActiveChat, activeChat, addFriend, searchIt
             <img src={(item.type === "group")?logoGroup:logoUser} alt="logo-user" width="45" height="45" />
             <Container className={classes.dialogDetails}>
                 <Row row>{item.name}</Row>
-                <Row row className={classes.messageText}>{item.messages.length > 0 && item.messages[item.messages.length-1].text}</Row>
+                {item.lastMessage && <Row  className={classes.messageText}>{item.lastMessage.text}</Row>}
             </Container>
         </StyledDialog>
         }

@@ -1,15 +1,14 @@
 import React from 'react';
 import {reduxForm, stopSubmit, Field} from "redux-form";
 import {connect} from 'react-redux';
-import classNames from "classnames";
-
-import {makeStyles} from '@material-ui/core/styles';
+import styled from "styled-components";
+// MATERIAL UI
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
-
+// COMPONENTS 
 import {Input} from "../../common/FormsControl.jsx";
 import {required} from "../../validators/required";
 import {maxLengthCreator} from "../../validators/maxLengthCreator";
@@ -17,81 +16,69 @@ import {minLengthCreator} from "../../validators/minLength";
 import {regexEmail} from "../../validators/regexEmail";
 import {sendEmailThunk} from '../../redux/middleWares/userThunks';
 
-const useStyles = makeStyles(theme => ({
-    form: {
-        width: '100%', // Fix IE 11 issue.
-        marginTop: theme.spacing(1),
-    },
-    paper: {
-        margin: theme.spacing(1),
-        marginTop: theme.spacing(-20),
-        display: 'flex',
-        border: '1px solid #e6e6e6',
-        height: "250px",
-        padding: '15px',
-        background: '#fff',
-        borderRadius: '4px',
-        position: "relative",
-        flexDirection: 'column',
-        justifyContent: "center",
-    },
-    label: {
-        fontSize: "20px",
-        position: "relative",
-        marginBottom: "20px"
-    },
-    submit: {
-        marginTop: "calc(100% - 305px)",
-        marginBottom: "10px"
-    },
-    input: {
-        marginTop: "0"
+// STYLED
+const StyledForm = styled.form`
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    border-radius:4px;
+    position:relative;
+    margin-top: -100px;
+    padding:10px;
+    background:#fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    >div{
+        min-height:75px;
     }
-}));
+`
+const StyledSubmit = styled(Button)`
+    margin-top:50px!important;
+    margin-bottom:5px!important;
+    background-color:#3f51b5!important;
+`;
+const StyledField = styled(Field)`
+    width:100%;
+    padding:8px;
+    border:none;
+    border-bottom:1px solid #000;
+    outline:none;
+    width: -webkit-fill-available;
+`;
+
 
 let maxLength30 = maxLengthCreator(30);
 let minLength7 = minLengthCreator(7);
 
 let Form = ({handleSubmit, ...props}) => {
-    const classes = useStyles();
-
     return (
         <Container component="main" maxWidth="xs">
-            <form onSubmit={handleSubmit} className={classNames(classes.paper, "form-content")}>
+            <StyledForm onSubmit={handleSubmit} className="form-content">
                 <FormControl>
-                    <InputLabel htmlFor="email" className={classes.label}>Input your email address</InputLabel>
-                    <Field type="text" id="email" name="email"
-                           validate={[required, maxLength30, regexEmail]}
+                    <StyledField labelText="Input your email address" type="text" id="email" name="email" validate={[required, maxLength30, regexEmail]} component={Input} />
+                    {
                         // startAdornment={
                         //     <InputAdornment position="start">
                         //        <AccountCircle/>
                         //     </InputAdornment>
                         // }
-                           component={Input}
-                           className={classes.input}/>
+                    }
                 </FormControl>
 
                 <FormControl>
-                    <InputLabel htmlFor="password" className={classes.label}>Input password</InputLabel>
-                    <Field id="password" name="password"
-                           component={Input}
-                           validate={[required, minLength7]}
-                           className={classes.input}/>
+                    <StyledField labelText="Input password" id="password" name="password" component={Input} validate={[required, minLength7]} autoComplete="off"/>
 
                 </FormControl>
+
                 {props.error && <p>{props.error}</p>}
-                <Button type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}>
+
+                <StyledSubmit type="submit"  variant="contained" color="primary">
                     Sign Up
-                </Button>
+                </StyledSubmit>
 
                 <Link href='/login' variant="body2" align="center">
                     {"Back to Sign In"}
                 </Link>
-            </form>
+            </StyledForm>
         </Container>
     );
 };

@@ -7,7 +7,7 @@ import styled from "styled-components";
 
 import { Header } from "./Header/Header.jsx";
 import { SidebarContainer } from "./../../containers/SidebarContainer.jsx";
-import { Chat } from "./Chat/Chat.jsx";
+import { ChatContainer } from "./../../containers/ChatContainer.jsx";
 
 const StyledDiv = styled.div`
      background: #e7ebf0   
@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const Profile = ({setShowGroupCreate,setShowGroupSettings, clearAll, user, sendMessage, 
+export const Profile = ({setShowGroupCreate,setShowGroupSettings,setScrollTopActiveChat,logout,list, clearAll,setStartActual,setEndActual, sendMessage, setScroll,scrollAfterAddMessage,startIndexMessagesLoaded,endIndexMessagesLoaded,
                         activeChat,setActiveChat,handleSearch }) => {
     const classes = useStyles();
 
@@ -49,14 +49,22 @@ export const Profile = ({setShowGroupCreate,setShowGroupSettings, clearAll, user
                         <SidebarContainer 
                             setActiveChat={setActiveChat}
                             activeChat={activeChat}
+                            logout={logout}
                             openSettings={openSettings}
                             handleSearch={handleSearch} />
-                        <Chat clearAll={clearAll}
+                        {activeChat && <ChatContainer clearAll={clearAll}
+                        startIndexMessagesLoaded={startIndexMessagesLoaded}
+                        endIndexMessagesLoaded={endIndexMessagesLoaded}
+                            list={list}
+                            setStartActual={setStartActual}
+                            setScroll={setScroll}
+                            setEndActual={setEndActual}
+                            scrollAfterAddMessage={scrollAfterAddMessage}
+                            setScrollTopActiveChat={setScrollTopActiveChat}
                             setShowGroupCreate={setShowGroupCreate}
                             setShowGroupSettings={setShowGroupSettings}
-                            user={user}
-                            chat={activeChat}
-                            sendMessage={sendMessage} />
+                            activeChat={activeChat}
+                            sendMessage={sendMessage} />}
                     </Grid>
                 </Grid>
             </Container>

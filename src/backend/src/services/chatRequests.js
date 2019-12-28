@@ -8,7 +8,7 @@ chatServices.UpdateMembers = (userId, chatId, membersId) => {
 }
 
 chatServices.createChat = (user, type, chatName) => {
-    const chat = new Chat({ type: type, membersId: [user._id], name: chatName, messagesId: [], userId: user._id });
+    const chat = new Chat({ type: type, membersId: [user._id], name: chatName, messagesId: [], userId: user._id,position:null });
     chat.save();
 
     const firstMember = [user.firstName + " " + user.lastName];
@@ -68,10 +68,21 @@ chatServices.findChatByFilter = (filterValue, filterName) => {
     }
 }
 
-chatServices.findByIdAndUpdate = (chatId) => {
-    return Chat.findByIdAndUpdate(chatId, { $set: { messagesId: [] } }, (err) => {
-        return err;
-    });
+chatServices.findByIdAndUpdate = (chatId,value,filter) => {
+    switch(filter){
+        case "messagesId":
+            return Chat.findByIdAndUpdate(chatId, { $set: { messagesId: value || [] } }, (err) => {
+                return err;
+            });
+        case "position":
+            return Chat.findByIdAndUpdate(chatId, { $set: { position: value || 0 } }, (err) => {
+                return err;
+            });
+        default: 
+            return Chat.findByIdAndUpdate(chatId, { $set: { messagesId: value || [] } }, (err) => {
+                return err;
+            });
+    }
 }
 
 chatServices.addMessage = (messageId, chatId) => {

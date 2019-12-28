@@ -1,5 +1,5 @@
 import * as consts from "./../actions/authActions";
-
+// import {initialState} from "./../initialState";
 export const initialState = {
     isAuth: false
 };

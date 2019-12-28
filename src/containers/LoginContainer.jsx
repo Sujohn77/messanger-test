@@ -16,7 +16,8 @@ const LoginContainer = (props) => {
 
 const mapStateToProps = (state) => {
     return {
-        isAuth: state.auth.isAuth
+        isAuth: state.auth.isAuth,
+        isFetching:state.profilePage.isFetching
     }
 };
 

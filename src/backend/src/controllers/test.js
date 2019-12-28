@@ -1,5 +1,5 @@
 const User = require("../models/user");
-
+const Chat = require("../models/chat");
 const testController = {};
 
 testController.delete = async (req, res) => {
@@ -33,7 +33,28 @@ testController.clearDialogs = async (req, res) => {
             console.log(err);
         }
     });
+    Chat.deleteMany({},(err)=>{
+        if(err){
+            console.log(err);
+        }
+    })
 
+    User.find({}, (err, users) => {
+        res.json(users);
+    });
+};
+
+testController.deleteFriends = async (req, res) => {
+    User.updateMany({}, {$set: {"friendsId": []}}, (err) => {
+        if (err) {
+            console.log(err);
+        }
+    });
+    Chat.deleteMany({},(err)=>{
+        if(err){
+            console.log(err);
+        }
+    })
 
     User.find({}, (err, users) => {
         res.json(users);

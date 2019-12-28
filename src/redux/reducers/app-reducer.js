@@ -1,5 +1,5 @@
 import * as consts from "./../actions/appActions";
-
+// import {initialState} from "./../initialState";
 export const initialState = {
     initialized: false
 };

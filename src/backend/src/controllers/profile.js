@@ -39,6 +39,19 @@ profileController.addMembersToChat = async (req, res) => {
     }
 };
 
+profileController.saveScrollPositionChat = async (req, res) => {
+    const {chatId, position} = req.body;
+
+    await chatServices.findByIdAndUpdate(chatId,position,"position")
+
+    response = {
+        data:{},
+        resultCode: 0
+    }
+
+    res.status(200).json(response);
+}
+
 profileController.createGroup = async (req, res) => {
     const nameGroup = req.params.name;
     const [profile] = await verify(req.token, "secretKey");
@@ -52,7 +65,7 @@ profileController.createGroup = async (req, res) => {
             let allowCreateChat = 0;
             chats.forEach((chat) => {
 
-                if (chat.name == nameGroup && chat.type == "group") {
+                if (chat.name === nameGroup && chat.type === "group") {
                     allowCreateChat++
                 }
             });
@@ -130,7 +143,7 @@ profileController.addFriend = async (req, res) => {
             const chat = await chatServices.findChatByFilter([myProfile.id, friendProfile.id], "members");
 
             if (chat == null) {
-                return Chat.create({ type: "dialog", membersId: [myProfile.id, friendProfile.id], messagesId: []}, async (err, chat) => {
+                return Chat.create({ type: "dialog", membersId: [myProfile.id, friendProfile.id], messagesId: [],position:null}, async (err, chat) => {
                     if (err) {
                         console.log(err);
                         return false;
@@ -182,5 +195,33 @@ profileController.getUserWithName = async (req, res) => {
         res.status(200).json(response);
     });
 };
+
+profileController.getPortionMessages = async(req, res) => {
+    const chatId = req.params.chatId;
+    const {startIndex,endIndex} = req.body
+
+    const chat = await chatServices.findChatByFilter(chatId,"id");
+    const messages = await messageServices.findMessagesByFilter(chat.messagesId,"id");
+
+    let filterMessages;
+    let hasNewPage = true;
+    if(endIndex >= messages.length){
+         filterMessages = messages.slice(startIndex,messages.length);
+         hasNewPage = false;
+    }
+    else{
+        filterMessages = messages.slice(startIndex,endIndex);
+    }
+    
+    const response = {
+        data:{
+            messages:filterMessages,
+            hasNewPage
+        },
+        resultCode:0
+    }
+
+    res.status(200).json(response);
+}
 
 module.exports = profileController;

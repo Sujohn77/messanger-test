@@ -1,12 +1,14 @@
 import React from 'react';
-import "./../assets/css/animate-input.scss";
+import "./../assets/css/animate-input.scss"
+import classnames from "classnames";
 
-const FormsControl = ({meta,children}) =>{
-    let hasError = (meta.error && meta.touched);
+const FormsControl = ({meta,children,input,labelText}) =>{
+    let hasError = (meta.error && meta.touched && !meta.active);
     return(
         <div>
-            <div className={(hasError)? "error":null}>
+            <div className={classnames("input-block")}>
                 {children}
+                <label name={input.name} htmlFor="">{labelText}</label>
             </div>
             { hasError && <span className="error">{meta.error}</span> }
         </div>

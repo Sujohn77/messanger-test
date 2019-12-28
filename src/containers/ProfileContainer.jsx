@@ -4,15 +4,16 @@ import withAuthRedirect from "./../hoc/withAuthRedirect.jsx";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { logout } from "./../redux/actionCreators/loginActionCreators";
-import { addFriend, clearAll, searchUsers} from "./../redux/middleWares/userThunks";
+import { addFriend, clearAll} from "./../redux/middleWares/userThunks";
 import { setAuth } from "./../redux/actionCreators/authActionCreators";
-import { setShowGroupCreate, updateChats, setShowGroupSettings } from "./../redux/actionCreators/profileActionCreators";
-
-import {getUserForSocket} from "./../redux/selectors/profile-selectors";
+import { setShowGroupCreate, updateChats, setShowGroupSettings, setActiveChatId } from "./../redux/actionCreators/profileActionCreators";
+import { updateMessages } from "./../redux/actionCreators/messageActionCreators";
+import { getUserForSocket } from "./../redux/selectors/profile-selectors";
+import { searchUsers } from "./../redux/middleWares/userThunks";
 import { MESSAGE_SENT, MESSAGE_RECIEVED } from "./../Events"
 
 import io from "socket.io-client"
-import Preloader from "./../common/Preloader.jsx";
+import { Redirect } from "react-router-dom";
 
 const socketUrl = "http://localhost:3001"
 
@@ -23,31 +24,80 @@ class ProfileContainer extends React.Component {
             activeChat: this.props.chats && this.props.chats[0],
             chats: this.props.chats,
             socket: null,
+            scrollAfterAddMessage:false,
+            startIndexMessagesLoaded:null,
+            endIndexMessagesLoaded:null
         }
     }
     componentDidMount(){
         const socket = io(socketUrl);
         this.setState({socket});
-        if(this.state.activeChat){
-            for(let i =0;i<this.state.chats.length;i++){
-                socket.on(`${MESSAGE_RECIEVED}-${this.props.chats[i]._id}`, this.addMessageToChat(this.props.chats[i]._id))
-            }
-        }      
+            
+        if(this.props.chats && this.props.chats.length > 0){
+            if(this.state.activeChat){
+                for(let i =0;i<this.state.chats.length;i++){
+                    socket.on(`${MESSAGE_RECIEVED}-${this.props.chats[i]._id}`, this.addMessageToChat(this.props.chats[i]._id))
+                }
+            }      
+            
+            this.setActiveChat(this.state.activeChat);
+        }
+        this.setActualMessageIndexes(this.state.activeChat);
+        
     }
     setActiveChat(chat){
         this.setState({activeChat:chat})
+        
+        this.props.setActiveChatId(chat._id);
+
+        this.setActualMessageIndexes(chat);
+    }
+
+    setActualMessageIndexes(chat){
+        let actualStartIndex = 0;
+        if(chat.position && chat.position > 0){
+            actualStartIndex = Math.ceil(chat.position / 62);
+        }
+        
+        
+        this.setState({startIndexMessagesLoaded:actualStartIndex});
+
+        this.setState({endIndexMessagesLoaded:actualStartIndex+15});
+    }
+
+    setStartActual(value){
+        this.setState({startIndexMessagesLoaded:value});
+    }
+
+    setEndActual(value){
+        this.setState({endIndexMessagesLoaded:value});
     }
 
     addMessageToChat (chatId) {
         return message => {   
+            this.props.list.push(message);
             const newChats = this.props.chats.map((chat) => {
                 if(chat._id === chatId){
-                    chat.messages.push(message)
+                    
+                    chat.lastMessage = message;
+                    chat.length += 1;
                 }
                 return chat
             })
+            // UPDATE LAST MESSAGE OF CHAT
             this.props.updateChats(newChats);
+            // SHOW MY NEW MESSAGE 
+            this.props.updateMessages([...this.props.list,message]);
+            //  SCROLLTOP OF CHAT MESSAGES
+            if(this.state.activeChat.length > 14){
+                this.setState({offsetTop:true});
+            }
+            this.setState({endIndexMessagesLoaded:this.state.endIndexMessagesLoaded+1});
         }
+    }
+
+    setScroll(value){
+        this.setState({scrollAfterAddMessage:value});
     }
 
     sendMessage(value)  {
@@ -57,13 +107,22 @@ class ProfileContainer extends React.Component {
         if(value){
             const newChats = this.props.chats.map((chat) => {
                 if(chat._id === this.state.activeChat._id){
-                    chat.messages.push(message)
+                    chat.lastMessage = message;
+                    chat.length += 1;
                 }
                 return chat
             })
+            // UPDATE LAST MESSAGE OF CHAT
             this.props.updateChats(newChats);
-            
+            // SHOW MY NEW MESSAGE 
+            this.props.updateMessages([...this.props.list,message]);
+            // SHOW MESSAGE FOR ALL SUBSRIBERS
             socket.emit(MESSAGE_SENT, { text: value, chatId: this.state.activeChat._id,sender: this.props.user.name});
+            //  SCROLLTOP OF CHAT MESSAGES
+            if(this.state.activeChat.length > 14){
+                this.setState({offsetTop:true});
+            }
+            this.setState({endIndexMessagesLoaded:this.state.endIndexMessagesLoaded+1});
         }
         
     }
@@ -75,29 +134,41 @@ class ProfileContainer extends React.Component {
     logoutWithToken(){
         localStorage.clear();
         logout();
-        setAuth(false);
+        this.props.setAuth(false);
     };
+    
     render() {
-        if(!this.props.chats)
-            return <Preloader/>
-            
-        return <Profile {...this.props}
+
+        if(!this.props.isAuth)
+            return <Redirect to="/login"/>
+
+        return<><div id="123"></div>  <Profile {...this.props}
+        setEndActual={this.setEndActual.bind(this)}
+        setStartActual={this.setStartActual.bind(this)}
+        startIndexMessagesLoaded={this.state.startIndexMessagesLoaded}
+        endIndexMessagesLoaded={this.state.endIndexMessagesLoaded}
             setActiveChat={this.setActiveChat.bind(this)}
             activeChat={this.state.activeChat}
+            setScroll={this.setScroll.bind(this)}
+            scrollAfterAddMessage={this.state.scrollAfterAddMessage}
             addFriend={this.props.addFriend} sendMessage={this.sendMessage.bind(this)}
-            logout={this.logoutWithToken.bind(this)} handleSearch={this.handleSearch.bind(this)} />
+            logout={this.logoutWithToken.bind(this)} handleSearch={this.handleSearch.bind(this)} /></>
     }
 
 };
 
 const mapStateToProps = state => {
+
     return {
         user: getUserForSocket(state),
+        list: state.messages.list,
+        isAuth:state.auth.isAuth,
         chats: state.profilePage.chats,
+        isFetching:state.profilePage.isFetching
     }
 };
 
 export default compose(
     withAuthRedirect,
-    connect(mapStateToProps, { updateChats, logout, clearAll, setShowGroupCreate, setShowGroupSettings, addFriend, searchUsers, setAuth })
+    connect(mapStateToProps, {updateMessages, updateChats, logout,searchUsers, clearAll, setShowGroupCreate, setShowGroupSettings, addFriend, setAuth, setActiveChatId })
 )(ProfileContainer);

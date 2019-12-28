@@ -1,13 +1,25 @@
 import * as consts from "./../actions/userActions";
-import {initialState} from "./../initialState";
+// import {initialState} from "./../initialState";
+
+export const initialState = {
+    user:{
+        email:null,
+        password:null,
+        firstName:null,
+        lastName: null
+    },
+    isVerified:false,
+    accessCode: true
+};
+
 
 export const userReducer = (state = initialState, action) => {
     switch (action.type) {
         case consts.SIGN_UP_TRIAL:
             return {
                 ...state,
-                data: {
-                    ...state.data,
+                user: {
+                    ...state.user,
                     email: action.payload.email,
                     password: action.payload.password
                 },
@@ -17,25 +29,24 @@ export const userReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isAuth: true,
-                data: {
-                    ...state.data,
+                user: {
+                    ...state.user,
                     firstName: action.payload.firstName,
                     lastName: action.payload.lastName,
                 }
             };
         case consts.LOG_IN:
-            debugger
             return {
                 ...state,
-                data: action.payload,
+                user: action.payload,
                 isAuth: true
             };
         case consts.LOG_OUT:
             return {
                 ...state,
                 isAuth: false,
-                data: {
-                    ...state.data,
+                user: {
+                    ...state.user,
                     email: null,
                     password: null
                 }

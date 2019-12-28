@@ -9,7 +9,9 @@ import "./../assets/css/modal.scss"
 
 export const ModalSettingsChat = ({addUserToGroup,onSubmit,setShowGroupSettings,users,addedUsers,...props}) => {
     const checkActiveUser = (user) => {
-        return addedUsers.includes(user);
+        if(addedUsers.length > 0){
+            return addedUsers.includes(user);
+        }
     }
     const usersElements = users && users.map((user) => <div className={classnames("user-item",checkActiveUser(user) && "user-item-active")} title={user.email} onClick={()=>addUserToGroup(user)}>{user.fullName}</div>)
     

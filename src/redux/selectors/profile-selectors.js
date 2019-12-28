@@ -19,7 +19,12 @@ export const getFilteredSearchUsers = createSelector([getSearchUsers,getProfileI
 );
 
 const getProfileName = (state) => {
-    return state.loginPage.user.firstName + " " + state.loginPage.user.lastName;
+    if(state.userData.user.lastName){
+        return state.userData.user.firstName + " " + state.userData.user.lastName;
+    }
+    else{
+        return state.userData.user.firstName;
+    }
 }
 
 export const getUserForSocket = createSelector([getProfileId,getProfileName],

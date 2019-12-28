@@ -4,11 +4,9 @@ import store from "./../store"
 import { UserAPI, ProfileAPI } from "../../api/user";
 
 import { setRegister, setTrialRegister, verify } from "../actionCreators/registerActionCreators";
-import { updateChatMembers,updateFriendList, setSearchUsers, setProfileData, clearMessagesChat, setShowGroupSettings, setShowGroupCreate, addChat } from "../actionCreators/profileActionCreators";
+import { updateChatMembers,updateFriendList, setSearchUsers, setProfileData, clearMessagesChat, setShowGroupSettings, setShowGroupCreate, addChat, toggleFetching } from "../actionCreators/profileActionCreators";
 import { login } from "../actionCreators/loginActionCreators";
 import { setAuth } from "../actionCreators/authActionCreators";
-
-
 
 const initializer = (dispatch) => (profileData, loginData) => {
     dispatch(login(loginData));
@@ -32,11 +30,19 @@ export const sendEmailThunk = ({ email, password }) => async (dispatch) => {
 export const setUserData = ({ email, password, firstName, lastName }) => async (dispatch) => {
     try {
         const response = await UserAPI.setUserData({ email, password, firstName, lastName });
-
+        
+        
         if (response.resultCode === 0) {
             let token = response.data.token;
             localStorage.setItem("token", token);
+
             dispatch(setRegister({ firstName, lastName }));
+
+            const initializeUser = initializer(dispatch);
+            const id = response.data._id;
+            const userInfo = response.data.user;
+
+            initializeUser({ id,chats: [],friendList: [] }, userInfo);
         }
     } catch (e) {
         console.log(e.message);
@@ -44,8 +50,9 @@ export const setUserData = ({ email, password, firstName, lastName }) => async (
 };
 export const setLogin = ({ email, password }) => async (dispatch) => {
     try {
+        dispatch(toggleFetching(true));
         const response = await UserAPI.login({ email, password });
-
+        
         if (response.resultCode === 0) {
             let token = response.data.token;
             localStorage.setItem('token', token);
@@ -56,6 +63,7 @@ export const setLogin = ({ email, password }) => async (dispatch) => {
             const chats = response.data.chats;
             const userInfo = response.data.user;
             const friendList = response.data.friendList;
+            dispatch(toggleFetching(false));
             initializeUser({ id, chats, friendList }, userInfo);
         }
         else {
@@ -68,7 +76,6 @@ export const setLogin = ({ email, password }) => async (dispatch) => {
 
 export const clearAll = (chatId) => async (dispatch) => {
     try {
-        debugger
         const response = await ProfileAPI.clearChat(chatId);
         
         if (response.resultCode === 0) {
@@ -82,7 +89,8 @@ export const clearAll = (chatId) => async (dispatch) => {
 export const verifyCode = (code) => async (dispatch) => {
     try {
         const response = await UserAPI.verifyCode({ code });
-
+        console.log(response);
+        console.log(code);
         if (response.resultCode === 0) {
             dispatch(verify());
         } else {
@@ -98,7 +106,7 @@ export const addFriend = (friendEmail) => async (dispatch) => {
         let state = store.getState();
         
         const response = await ProfileAPI.addFriend(friendEmail, state.profilePage.id);
-        
+        debugger
         if (response.resultCode === 0) {
             dispatch(addChat(response.data.dialogNewFriend));
             dispatch(updateFriendList(response.data.friendList));
@@ -132,7 +140,6 @@ export const addMembers = (chatId,users) => async(dispatch) => {
 
     if (token !== null) {
         const response = await ProfileAPI.addMembers(userEmails,chatId,token);
-        debugger
         if(response.resultCode === 0){
             const userNames = users.map((user) => user.fullName);
             dispatch(updateChatMembers(userNames))
@@ -152,7 +159,6 @@ export const createGroup = (chatName) => async(dispatch) => {
         const response = await ProfileAPI.createChat(chatName,token);
         
         if(response.resultCode === 0){
-            debugger
             dispatch(addChat(response.data.chat))
             dispatch(setShowGroupSettings(true))
             dispatch(setShowGroupCreate(false))
@@ -161,13 +167,14 @@ export const createGroup = (chatName) => async(dispatch) => {
     
 }
 
-
 export const authThunk = () => async (dispatch) => {
     const token = localStorage.getItem('token');
 
     if (token !== null) {
+        dispatch(toggleFetching(true));
+        
         const response = await UserAPI.getAuth(token);
-
+                
         if (response.resultCode === 0) {
             const initializeUser = initializer(dispatch);
             const id = response.data._id;
@@ -175,7 +182,13 @@ export const authThunk = () => async (dispatch) => {
             const chats = response.data.chats;
             const userInfo = response.data.user;
             const friendList = response.data.friendList;
+
+            dispatch(toggleFetching(false));
             initializeUser({ id, chats, friendList }, userInfo);
         }
     }
+};
+
+export const saveChatPosition = (chatId, position) => async (dispatch) => {
+    await ProfileAPI.saveChatPosition(chatId,position);
 };

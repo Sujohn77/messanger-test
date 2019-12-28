@@ -1,15 +1,22 @@
 export const initialState = {
-    initialized:false,
-    data:{
+    user: {
         email:null,
         password:null,
         firstName:null,
-        lastName: null,
-        _id:null,
-        dialogs:[]
+        lastName: null
     },
-    emailError: false,
+    isVerified:false,
+    searchUsers: [],
+    chats: [],
+    id: null,
+    showSettingsGroup:false,
+    showCreateGroup: false,
+    isFetching:null,
+    activeChatId:null,
     isAuth:false,
-    accessCode:false,
-    isVerified: false
+    hasNextPage:true,
+    isNextPageLoading:false,
+    list:[],
+    startIndex:0,
+    endIndex:15
 };

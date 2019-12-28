@@ -3,7 +3,8 @@ import React from "react";
 
 const Preloader =() =>{
     return (
-        <div className="preloader">
+        // eslint-disable-next-line react/style-prop-object
+        <div className="preloader" style={{textAlign:"center"}}>
             {
                 <img src={preloadImg} alt=""/>
             }

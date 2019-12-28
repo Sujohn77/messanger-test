@@ -1,4 +1,4 @@
-import React, {useState,useCallback} from 'react';
+import React, {useState,useEffect} from 'react';
 
 import {FormUserDetails} from './FormUserDetails.jsx';
 import {FormWithConnect} from './FormEmailPassword.jsx';
@@ -6,14 +6,12 @@ import {FormVerifyCode} from "./FormVerifyCode.jsx";
 
 const Register = ({onSubmit, isVerified, verifyCode, sendEmailThunk, email}) => {
     const [step, setStep] = useState(1);
-    const memoizedHandleClick = useCallback(
-        (email,step,isVerified) => {
-            if(email !== null || isVerified){
+    useEffect(() => {
+        if(email !== null || isVerified){
             setStep(step+1);
         }
-    }, []);
-
-    memoizedHandleClick(email,step,isVerified);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isVerified,email]);
     
     switch (step) {
         case 1:

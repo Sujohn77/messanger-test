@@ -7,12 +7,12 @@ const User = require("../models/user");
 const VerifyInfo = require("../models/verifyInfo");
 //SERVICES
 // const chatServices = require("./../services/chatRequests");
-// const userServices = require("./../services/userRequests");
+ const userServices = require("./../services/userRequests");
 
 let response = require("./../response");
 
 const registerController = {};
-const ms = MailGun({apiKey: process.env.API_KEY || "29e54ee4f0e27ec7ca159d5b947f337e-1df6ec32-bfd3d900", domain: process.env.DOMAIN || "sandbox20959174ce9749cfb838249ad29f59db.mailgun.org"});
+const ms = MailGun({apiKey: process.env.API_KEY || "4ba1074de3fd3cba4261dce30cb425a6-5645b1f9-b9b7a73e", domain: process.env.DOMAIN || "my_list@sandbox2c5d5d1a9d974c4ab9b241cadff36ca7"});
 
 registerController.sendEmail = async (req, res) => { // CHECK AN EMAIL AND SEND CODE
 
@@ -123,16 +123,17 @@ registerController.registerMe = async (req, res) => {
         else {
             const dataToken = {email, password};
 
-            jwt.sign({user: dataToken}, "secretKey", (error, token) => {
+            jwt.sign({user: dataToken}, "secretKey",async (error, token) => {
                 if (error) {
                     console.log(err)
                 }
 
+                const user = await userServices.findUserByFilter(email, "email");
+
                 response = {
                     resultCode: 0,
-                    data: {token}
+                    data: {token,user,_id:user.id}
                 };
-
                 res.status(200).json(response);
             });
         }
