@@ -1,8 +1,11 @@
+// LIBRARIES
 import React from "react";
-import {SignIn} from "../components/Login.jsx";
 import {connect} from "react-redux";
 import {Redirect} from "react-router-dom";
-import {setLogin} from "./../redux/middleWares/userThunks"
+// COMPONENTS
+import {SignIn} from "../components/Login.jsx";
+// MIDDLEWARES
+import {setLogin} from "./../redux/middleWares/login"
 
 const LoginContainer = (props) => {
     const onSubmit = (values) => {

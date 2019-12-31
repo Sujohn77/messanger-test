@@ -1,8 +1,11 @@
+// LIBRARIES
 import React from "react";
-import Register from "./../components/Register/Register.jsx";
 import {connect} from "react-redux";
 import {Redirect} from "react-router-dom"
-import {sendEmailThunk, setUserData, verifyCode} from "./../redux/middleWares/userThunks";
+// COMPONENTS
+import Register from "./../components/Register/Register.jsx";
+// MIDDLEWARES
+import {sendEmailThunk, setUserData, verifyCode} from "./../redux/middleWares/register";
 
 const RegisterContainer = ({setUserData, email, password, ...props}) => {
     const onSubmit = ({firstName, lastName}) => {

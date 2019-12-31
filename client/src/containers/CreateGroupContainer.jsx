@@ -1,10 +1,11 @@
+// LIBRARIES
 import React, { useState } from "react";
 import { stopSubmit } from "redux-form";
 import { connect } from "react-redux";
-// REDUX
+// ACTION CREATORS
 import { setShowGroupSettings} from "./../redux/actionCreators/profileActionCreators";
-import { addMembers, createGroup } from "./../redux/middleWares/userThunks";
-import {getChatNamesUser} from "./../redux/selectors/profile-selectors";
+// MIDDLEWARES
+import { addMembers, createGroup } from "./../redux/middleWares/profile";
 // COMPONENTS
 import { ModalCreateGroup } from "../common/ModalCreateGroup.jsx";
 import { ModalSettingsChat } from "../common/ModalSettingsChat.jsx";

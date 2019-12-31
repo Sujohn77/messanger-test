@@ -1,11 +1,12 @@
+// LIBRARIES
 import React from "react";
 import { connect } from "react-redux";
-
-import { logout } from "./../redux/actionCreators/loginActionCreators";
-import { addFriend, searchUsers} from "./../redux/middleWares/userThunks";
-import { getFilteredSearchUsers} from "./../redux/selectors/profile-selectors";
-
+// COMPONENTS
 import {Sidebar} from "./../components/Profile/Sidebar.jsx"
+// MIDDLEWARES
+import { addFriend, searchUsers} from "./../redux/middleWares/profile";
+// SELECTORS
+import { getFilteredSearchUsers} from "./../redux/selectors/profile-selectors";
 
 const Container = ({setActiveChat, activeChat, searchItems, openSettings, handleSearch, ...props}) => {
     return <Sidebar {...props}

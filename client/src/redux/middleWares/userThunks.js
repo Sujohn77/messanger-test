@@ -1,7 +1,8 @@
 import { stopSubmit } from "redux-form";
 import store from "./../store"
 
-import { UserAPI, ProfileAPI } from "../../api/user";
+import  UserAPI  from "./../../api/NotAuthorizied";
+import  ProfileAPI  from "./../../api/Authorized";
 
 import { setRegister, setTrialRegister, verify } from "../actionCreators/registerActionCreators";
 import { updateChatMembers,updateFriendList, setSearchUsers, setProfileData, clearMessagesChat, setShowGroupSettings, setShowGroupCreate, addChat, toggleFetching } from "../actionCreators/profileActionCreators";
@@ -15,8 +16,9 @@ const initializer = (dispatch) => (profileData, loginData) => {
 };
 
 export const sendEmailThunk = ({ email, password }) => async (dispatch) => {
+    const apiServices = new UserAPI();
     try {
-        const response = await UserAPI.sendCodeAndCheckEmail({ email, password });
+        const response = await apiServices.sendCodeAndCheckEmail({ email, password });
 
         if (response.resultCode === 0) {
             dispatch(setTrialRegister({ email, password }))
@@ -28,10 +30,10 @@ export const sendEmailThunk = ({ email, password }) => async (dispatch) => {
     }
 };
 export const setUserData = ({ email, password, firstName, lastName }) => async (dispatch) => {
+    const apiServices = new UserAPI();
     try {
-        const response = await UserAPI.setUserData({ email, password, firstName, lastName });
-        
-        
+        const response = await apiServices.setUserData({ email, password, firstName, lastName });
+
         if (response.resultCode === 0) {
             let token = response.data.token;
             localStorage.setItem("token", token);
@@ -49,9 +51,10 @@ export const setUserData = ({ email, password, firstName, lastName }) => async (
     }
 };
 export const setLogin = ({ email, password }) => async (dispatch) => {
+    const apiServices = new UserAPI();
     try {
         dispatch(toggleFetching(true));
-        const response = await UserAPI.login({ email, password });
+        const response = await apiServices.login({ email, password });
         
         if (response.resultCode === 0) {
             let token = response.data.token;
@@ -75,8 +78,9 @@ export const setLogin = ({ email, password }) => async (dispatch) => {
 };
 
 export const clearAll = (chatId) => async (dispatch) => {
+    const apiServices = new ProfileAPI();
     try {
-        const response = await ProfileAPI.clearChat(chatId);
+        const response = await apiServices.clearChat(chatId);
         
         if (response.resultCode === 0) {
             dispatch(clearMessagesChat(chatId));
@@ -87,8 +91,9 @@ export const clearAll = (chatId) => async (dispatch) => {
 };
 
 export const verifyCode = (code) => async (dispatch) => {
+    const apiServices = new UserAPI();
     try {
-        const response = await UserAPI.verifyCode({ code });
+        const response = await apiServices.verifyCode({ code });
         console.log(response);
         console.log(code);
         if (response.resultCode === 0) {
@@ -102,10 +107,11 @@ export const verifyCode = (code) => async (dispatch) => {
 };
 
 export const addFriend = (friendEmail) => async (dispatch) => {
+    const apiServices = new ProfileAPI();
     try {
         let state = store.getState();
         
-        const response = await ProfileAPI.addFriend(friendEmail, state.profilePage.id);
+        const response = await apiServices.addFriend(friendEmail, state.profilePage.id);
         debugger
         if (response.resultCode === 0) {
             dispatch(addChat(response.data.dialogNewFriend));
@@ -117,12 +123,13 @@ export const addFriend = (friendEmail) => async (dispatch) => {
 };
 
 export const searchUsers = (firstName, lastName = "") => async (dispatch) => {
+    const apiServices = new ProfileAPI();
     try {
         if (firstName === "") {
             dispatch(setSearchUsers([]));
         }
         else {
-            const response = await ProfileAPI.getUsers(firstName, lastName);
+            const response = await apiServices.getUsers(firstName, lastName);
             
             if (response.resultCode === 0) {
                 dispatch(setSearchUsers(response.data.users));
@@ -137,9 +144,9 @@ export const searchUsers = (firstName, lastName = "") => async (dispatch) => {
 export const addMembers = (chatId,users) => async(dispatch) => {
     const token = localStorage.getItem('token'); 
     const userEmails = users.map((user) => user.email);
-
+    const apiServices = new ProfileAPI();
     if (token !== null) {
-        const response = await ProfileAPI.addMembers(userEmails,chatId,token);
+        const response = await apiServices.addMembers(userEmails,chatId,token);
         if(response.resultCode === 0){
             const userNames = users.map((user) => user.fullName);
             dispatch(updateChatMembers(userNames))
@@ -154,9 +161,9 @@ export const addMembers = (chatId,users) => async(dispatch) => {
 
 export const createGroup = (chatName) => async(dispatch) => {
     const token = localStorage.getItem('token'); 
-
+    const apiServices = new ProfileAPI();
     if (token !== null) {
-        const response = await ProfileAPI.createChat(chatName,token);
+        const response = await apiServices.createChat(chatName,token);
         
         if(response.resultCode === 0){
             dispatch(addChat(response.data.chat))
@@ -169,11 +176,11 @@ export const createGroup = (chatName) => async(dispatch) => {
 
 export const authThunk = () => async (dispatch) => {
     const token = localStorage.getItem('token');
-
+    const apiServices = new UserAPI();
     if (token !== null) {
         dispatch(toggleFetching(true));
         
-        const response = await UserAPI.getAuth(token);
+        const response = await apiServices.getAuth(token);
                 
         if (response.resultCode === 0) {
             const initializeUser = initializer(dispatch);
@@ -190,5 +197,7 @@ export const authThunk = () => async (dispatch) => {
 };
 
 export const saveChatPosition = (chatId, position) => async (dispatch) => {
-    await ProfileAPI.saveChatPosition(chatId,position);
+    const apiServices = new ProfileAPI();
+
+    await apiServices.saveChatPosition(chatId,position);
 };

@@ -1,19 +1,24 @@
+// LIBRARIES
 import React from "react";
-import { Profile } from "./../components/Profile/Profile.jsx";
-import withAuthRedirect from "./../hoc/withAuthRedirect.jsx";
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { logout } from "./../redux/actionCreators/loginActionCreators";
-import { addFriend, clearAll} from "./../redux/middleWares/userThunks";
-import { setAuth } from "./../redux/actionCreators/authActionCreators";
-import { setShowGroupCreate, updateChats, setShowGroupSettings, setActiveChatId } from "./../redux/actionCreators/profileActionCreators";
-import { updateMessages } from "./../redux/actionCreators/messageActionCreators";
-import { getUserForSocket } from "./../redux/selectors/profile-selectors";
-import { searchUsers } from "./../redux/middleWares/userThunks";
-import { MESSAGE_SENT, MESSAGE_RECIEVED } from "./../Events";
-
 import io from "socket.io-client"
 import { Redirect } from "react-router-dom";
+// COMPONENTS
+import withAuthRedirect from "./../hoc/withAuthRedirect.jsx";
+import { Profile } from "./../components/Profile/Profile.jsx";
+// ACTION CREATORS
+import { logout } from "./../redux/actionCreators/loginActionCreators";
+import { updateMessages } from "./../redux/actionCreators/messageActionCreators";
+import { setAuth } from "./../redux/actionCreators/authActionCreators";
+import { setShowGroupCreate, updateChats, setShowGroupSettings, setActiveChatId } from "./../redux/actionCreators/profileActionCreators";
+// MIDDLEWARES
+import { addFriend, clearAll} from "./../redux/middleWares/userThunks";
+import { searchUsers } from "./../redux/middleWares/profile";
+// SELECTORS
+import { getUserForSocket } from "./../redux/selectors/profile-selectors"
+// OTHERS
+import { MESSAGE_SENT, MESSAGE_RECIEVED } from "./../Events";
 
 const socketUrl = "http://localhost:3001"
 

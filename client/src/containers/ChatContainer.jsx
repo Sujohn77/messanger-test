@@ -1,11 +1,14 @@
+// LIBRARIES
 import React, { useState, useEffect} from "react";
-
 import { connect } from "react-redux";
-import {getUserForSocket} from "./../redux/selectors/profile-selectors";
-import {loadNextPortion} from "./../redux/middleWares/messagethunk";
-import {updateChats} from "./../redux/actionCreators/profileActionCreators";
+// COMPONENTS
 import {Chat} from "./../components/Profile/Chat/Chat.jsx";
-import {saveChatPosition} from "./../redux/middleWares/userThunks";
+// ACTION CREATORS
+import {updateChats} from "./../redux/actionCreators/profileActionCreators";
+// MIDDLEWARES
+import {loadNextPortion,saveChatPosition} from "./../redux/middleWares/profile";
+// SELECTORS
+import {getUserForSocket} from "./../redux/selectors/profile-selectors";
 
 const Container = ({sendMessage,setShowGroupSettings,activeChat,loadNextPortion,activeChatId,chats,updateChats,saveChatPosition,...props}) => {
     const [message, setMessage] = useState("")

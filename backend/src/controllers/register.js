@@ -5,17 +5,19 @@ const crypto = require("crypto");
 //MODELS
 const User = require("../models/user");
 const VerifyInfo = require("../models/verifyInfo");
-//SERVICES
-// const chatServices = require("./../services/chatRequests");
- const userServices = require("./../services/userRequests");
+
+const userServices = require("./../services/userRequests");
 
 let response = require("./../response");
 
 const registerController = {};
-const ms = MailGun({apiKey: process.env.API_KEY || "4ba1074de3fd3cba4261dce30cb425a6-5645b1f9-b9b7a73e", domain: process.env.DOMAIN || "my_list@sandbox2c5d5d1a9d974c4ab9b241cadff36ca7"});
+
+const ms = MailGun({
+    apiKey: process.env.API_KEY || "4ba1074de3fd3cba4261dce30cb425a6-5645b1f9-b9b7a73e",
+    domain: process.env.DOMAIN || "my_list@sandbox2c5d5d1a9d974c4ab9b241cadff36ca7"
+});
 
 registerController.sendEmail = async (req, res) => { // CHECK AN EMAIL AND SEND CODE
-
     const {email, password} = req.body;
 
     User.find({email, password}, async (err, user) => {

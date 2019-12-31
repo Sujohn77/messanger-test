@@ -59,7 +59,6 @@ profileController.createGroup = async (req, res) => {
     if (profile) {
         try {
             // CHECK ON EXISTING A CHAT WITH THE SAME NAME
-
             const chats = await chatServices.findChatsByFilter(profile.user._id, "userId");
 
             let allowCreateChat = 0;

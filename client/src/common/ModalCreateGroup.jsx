@@ -7,13 +7,13 @@ import "./../assets/css/modal.scss"
 
 export const Modal = ({handleSubmit,closeModal,...props}) => {
     return (
-        <StyledModal {...props} class="modal-window">
+        <StyledModal {...props} className="modal-window">
             <form onSubmit={handleSubmit}>
                 <Field name="createGroup"
                         component="input"
                         className="input-group"/>      
                 <Button type="submit">Create</Button>
-                <Button onClick={closeModal} type="close" className="close-btn">X</Button>
+                <Button onClick={closeModal} type="button" className="close-btn">X</Button>
             </form>
         </StyledModal>)
 }

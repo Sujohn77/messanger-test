@@ -3,7 +3,6 @@ import {reduxForm, stopSubmit, Field} from "redux-form";
 import {connect} from 'react-redux';
 import styled from "styled-components";
 // MATERIAL UI
-import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";

@@ -96,7 +96,7 @@ export const Sidebar = ({ logout, setActiveChat, activeChat, addFriend, searchIt
              return <StyledDialog key={item._id} className={classes.activeDialog} onClick={() => setActiveChat(item)}>
             <img src={(item.type === "group")?logoGroup:logoUser} alt="logo-user" width="45" height="45" />
             <Container className={classes.dialogDetails}>
-                <Row row>{item.name}</Row>
+                <Row row="true">{item.name}</Row>
                 {item.lastMessage && <Row  className={classes.messageText}>{item.lastMessage.text}</Row>}
             </Container>
         </StyledDialog>
@@ -105,7 +105,7 @@ export const Sidebar = ({ logout, setActiveChat, activeChat, addFriend, searchIt
             return <StyledDialog key={item._id} className={classes.dialog} onClick={() => setActiveChat(item)}>
             <img src={(item.type === "group")?logoGroup:logoUser} alt="logo-user" width="45" height="45" />
             <Container className={classes.dialogDetails}>
-                <Row row>{item.name}</Row>
+                <Row row="true">{item.name}</Row>
                 {item.lastMessage && <Row  className={classes.messageText}>{item.lastMessage.text}</Row>}
             </Container>
         </StyledDialog>
@@ -116,7 +116,7 @@ export const Sidebar = ({ logout, setActiveChat, activeChat, addFriend, searchIt
     return <>
         {openSettings && <Settings logout={logout} />}
 
-        <Grid className={classes.dialogs} xs="3" item>
+        <Grid className={classes.dialogs}  item>
             <SearchInput list="users" className={classes.search} onChange={handleSearch} />
 
             <StyledSearchUsers id="users">{searchElements}</StyledSearchUsers>
