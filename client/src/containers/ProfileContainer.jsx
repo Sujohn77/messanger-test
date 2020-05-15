@@ -46,8 +46,9 @@ class ProfileContainer extends React.Component {
             }      
             
             this.setActiveChat(this.state.activeChat);
+            this.setActualMessageIndexes(this.state.activeChat);
         }
-        this.setActualMessageIndexes(this.state.activeChat);
+        
         
     }
     setActiveChat(chat){
@@ -60,6 +61,7 @@ class ProfileContainer extends React.Component {
 
     setActualMessageIndexes(chat){
         let actualStartIndex = 0;
+
         if(chat.position && chat.position > 0){
             actualStartIndex = Math.ceil(chat.position / 62);
         }
@@ -67,7 +69,7 @@ class ProfileContainer extends React.Component {
         
         this.setState({startIndexMessagesLoaded:actualStartIndex});
 
-        this.setState({endIndexMessagesLoaded:actualStartIndex+15});
+        this.setState({endIndexMessagesLoaded:actualStartIndex+17});
     }
 
     setStartActual(value){

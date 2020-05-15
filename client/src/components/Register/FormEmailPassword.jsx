@@ -64,7 +64,7 @@ let Form = ({handleSubmit, ...props}) => {
                 </FormControl>
 
                 <FormControl>
-                    <StyledField labelText="Input password" id="password" name="password" component={Input} validate={[required, minLength7]} autoComplete="off"/>
+                    <StyledField type="password" labelText="Input password" id="password" name="password" component={Input} validate={[required, minLength7]} autoComplete="off"/>
 
                 </FormControl>
 

@@ -65,13 +65,15 @@ loginController.login = async (req, res) => {
                         }));
         
                         const newChat = Factory.chatCreator(chat._id,chat.type, members,messages,chatName,chat.position);
-        
-                        chats.push({
-                            _id:newChat._id,
-                            lastMessage:newChat.messages[messages.length-1],
-                            length:newChat.messages.length,
-                            name:newChat.name,
-                            type:newChat.type});
+    
+                    chats.push({
+                        _id:newChat._id,
+                        lastMessage:newChat.messages[messages.length-1],
+                        length:newChat.messages.length,
+                        name:newChat.name,
+                        type:newChat.type,
+                        position:newChat.position || 0
+                    });
                     }
                     response = {
                         resultCode: 0,

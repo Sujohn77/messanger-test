@@ -18,26 +18,30 @@ export class MessagesContainer extends React.Component {
     }
   }
   componentDidUpdate(oldProps) {
-    // IF FIRST RENDER OR CHANGED CHAT TO INITIALIZE START POSTION OF CHAT
+    
+    // IF FIRST RENDER OR USER SWITCHED UP CHAT TO INITIALIZE START POSTION OF CHAT
     if (oldProps.chatId !== this.props.chatId) {
       this.setState({ initializedPosition: false });
     }
+    let self = this;
+    setTimeout(function(){
+      
+      if (self.refs.content && self.props.messagesLength > 14 && (self.props.scrollTopChat !== self.refs.content.scrollTop || self.props.scrollTopChat === 0) && !self.state.initializedPosition) {
 
-    if (this.refs.content && this.props.messagesLength > 14 && (this.props.scrollTopChat !== this.refs.content.scrollTop || this.props.scrollTopChat === 0) && !this.state.initializedPosition) {
-
-      // SET SCROLL TOP IF CHAT HAS IT"S POSITION OR NOT 
-      if (!this.props.scrollTopChat && this.props.scrollTopChat !== 0) {
-        this.refs.content.scrollTop = this.refs.content.scrollHeight - 596;
+        // SET SCROLL TOP IF CHAT HAS IT"S POSITION OR NOT 
+        if (!self.props.scrollTopChat && self.props.scrollTopChat !== 0) {
+          self.refs.content.scrollTop = self.refs.content.scrollHeight - 596;
+        }
+        else {
+          self.refs.content.scrollTop = self.props.scrollTopChat;
+        }
+  
+        self.setState({ oldOffset: self.refs.content.scrollTop });
+        // SET SCROLL AFTER ADDING MESSAGE
+        self.props.setScroll(false)
+        self.setState({ initializedPosition: true })
       }
-      else {
-        this.refs.content.scrollTop = this.props.scrollTopChat;
-      }
-
-      this.setState({ oldOffset: this.refs.content.scrollTop });
-      // SET SCROLL AFTER ADDING MESSAGE
-      this.props.setScroll(false)
-      this.setState({ initializedPosition: true })
-    }
+    },40)
 
     if (this.props.listItems.length !== oldProps.listItems.length) {
 
@@ -53,8 +57,9 @@ export class MessagesContainer extends React.Component {
     }
 
 
-
-    if (oldProps.messagesLength !== this.props.messagesLength) {
+    
+    if (this.props.messagesLength && oldProps.messagesLength !== this.props.messagesLength) {
+      debugger
       const iterableArray = [];
       for (let i = 0; i < this.props.messagesLength; i++) {
         iterableArray[i] = i;

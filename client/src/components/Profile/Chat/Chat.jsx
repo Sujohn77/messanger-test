@@ -54,8 +54,7 @@ const StyledMenu = styled.div`
 
 
 export const Chat = ({sendMessage, user,activeChatId,scrollAfterAddMessage,setScroll,messagesLength,savePositionChat,startIndex,setStartIndex,endIndex,setEndIndex,
-     hasNextPage,list, isNextPageLoading,setScrollTopActiveChat,loadNextPage,setEndActual, setShowGroupCreate, message, setStartActual,activeChat, clearAll, openGroup, setMessage, startIndexMessagesLoaded,endIndexMessagesLoaded}) => {
-        
+     hasNextPage,list,scrollTopChat, isNextPageLoading,setScrollTopActiveChat,loadNextPage,setEndActual, setShowGroupCreate, message, setStartActual,activeChat, clearAll, openGroup, setMessage, startIndexMessagesLoaded,endIndexMessagesLoaded}) => {
   return <>
         <Container>    
             <div>

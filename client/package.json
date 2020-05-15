@@ -62,5 +62,4 @@
     "redux-form": "^8.2.6",
     "redux-thunk": "^2.3.0"
   }
-
 }

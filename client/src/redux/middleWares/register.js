@@ -17,7 +17,7 @@ export const sendEmailThunk = ({ email, password }) => async (dispatch) => {
     const apiServices = new UserAPI();
     try {
         const response = await apiServices.sendCodeAndCheckEmail({ email, password });
-
+            
         if (response.resultCode === 0) {
             dispatch(setTrialRegister({ email, password }))
         } else {

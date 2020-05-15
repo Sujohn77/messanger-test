@@ -13,8 +13,8 @@ let response = require("./../response");
 const registerController = {};
 
 const ms = MailGun({
-    apiKey: process.env.API_KEY || "4ba1074de3fd3cba4261dce30cb425a6-5645b1f9-b9b7a73e",
-    domain: process.env.DOMAIN || "my_list@sandbox2c5d5d1a9d974c4ab9b241cadff36ca7"
+    apiKey: "13e425b336dcb176546a043b651467fb-3e51f8d2-12243019",
+    domain:"sandbox46fcb2d7f8ed4e00a72323fca5520b7b.mailgun.org"
 });
 
 registerController.sendEmail = async (req, res) => { // CHECK AN EMAIL AND SEND CODE
@@ -37,7 +37,7 @@ registerController.sendEmail = async (req, res) => { // CHECK AN EMAIL AND SEND 
             const verifyCode = crypto.randomBytes(3).toString("hex");
             console.log(email);
             const data = {
-                from: process.env.EMAIL_FROM,
+                from: process.env.EMAIL_FROM || "Test Messenger stonebo0sh76@gmail.com",
                 to: email,
                 subject: "Verify your email",
                 text: "Back to messenger and paste this code " + verifyCode

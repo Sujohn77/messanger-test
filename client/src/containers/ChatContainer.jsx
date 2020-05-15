@@ -30,17 +30,17 @@ const Container = ({sendMessage,setShowGroupSettings,activeChat,loadNextPortion,
             
             if(activeChat.length > 14 && activeChat.position > 20){
                 setStartIndex(Math.ceil(activeChat.position / 62));
-                setEndIndex(Math.ceil(activeChat.position / 62 + 15));
-                loadNextPortion(activeChatId, Math.ceil(activeChat.position / 62),Math.ceil(activeChat.position / 62 + 15))
+                setEndIndex(Math.ceil(activeChat.position / 62 + 17));
+                loadNextPortion(activeChatId, Math.ceil(activeChat.position / 62),Math.ceil(activeChat.position / 62 + 17))
                 props.setStartActual(Math.ceil(activeChat.position / 62));
-                props.setEndActual(Math.ceil(activeChat.position / 62 + 15));
+                props.setEndActual(Math.ceil(activeChat.position / 62 + 17));
             }
             else{
-                loadNextPortion(activeChatId,0,15)
+                loadNextPortion(activeChatId,0,17)
                 setStartIndex(0);
-                setEndIndex(15);
+                setEndIndex(17);
                 props.setStartActual(0);
-                props.setEndActual(15);
+                props.setEndActual(17);
             }
             
         }
@@ -77,7 +77,7 @@ const Container = ({sendMessage,setShowGroupSettings,activeChat,loadNextPortion,
             setShowGroupSettings(true)
         }
     }
-
+    
     return <Chat {...props}
     activeChat={activeChat}
                 startIndex={startIndex}

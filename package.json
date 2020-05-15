@@ -18,21 +18,23 @@
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-hamburger-menu": "^1.1.1",
-    "react-scripts": "3.2.0",
+    "react-scripts": "^3.3.1",
     "react-search-input": "^0.11.3",
     "react-virtualized": "^9.21.2",
     "react-window": "^1.8.5",
     "reselect": "^4.0.0",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
-    "styled-components": "^4.4.1"
+    "styled-components": "^4.4.1",
+    "webpack": "^4.41.0",
+    "webpack-dev-server": "^3.2.1"
   },
   "scripts": {
     "start": "npm start --prefix backend",
     "server": "npm start --prefix backend",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm start --prefix backend\" \"npm start --prefix client\"",
-    "heroku-postbuild":"npm install --prefix client && npm install --prefix backend && npm run build --prefix client"
+    "heroku-postbuild": "npm install --prefix client && npm install --prefix backend && npm run build --prefix client"
   },
   "eslintConfig": {
     "extends": "react-app"

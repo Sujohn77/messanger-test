@@ -18,5 +18,5 @@ export const initialState = {
     isNextPageLoading:false,
     list:[],
     startIndex:0,
-    endIndex:15
+    endIndex:17
 };
