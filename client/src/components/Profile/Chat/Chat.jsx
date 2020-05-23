@@ -95,7 +95,7 @@ export const Chat = ({sendMessage, user,activeChatId,scrollAfterAddMessage,setSc
                 <StyledButton onClick={() => sendMessage(message)}>Send</StyledButton>
             </div>
         </Container>
-        <CreateGroupContainer setShowGroupCreate={setShowGroupCreate} activeChat={activeChat} />
+        {/* <CreateGroupContainer setShowGroupCreate={setShowGroupCreate} activeChat={activeChat} /> */}
     </>
 };
 

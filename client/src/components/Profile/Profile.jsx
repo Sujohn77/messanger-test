@@ -8,6 +8,7 @@ import styled from "styled-components";
 import { Header } from "./Header/Header.jsx";
 import { SidebarContainer } from "./../../containers/SidebarContainer.jsx";
 import { ChatContainer } from "./../../containers/ChatContainer.jsx";
+import { CreateGroupContainer } from "../../containers/CreateGroupContainer.jsx";
 
 const StyledDiv = styled.div`
      background: #e7ebf0   
@@ -30,6 +31,17 @@ const useStyles = makeStyles(theme => ({
         position: "relative"
     },
 }));
+
+const StyledButton = styled.button`
+    background: #5682a3
+    color:  white
+    font-size: 1em
+    min-width:150px
+    padding: 0.25em 1em
+    border:none
+    height:50px
+    border-radius: 3px
+`;
 
 export const Profile = ({setShowGroupCreate,setShowGroupSettings,setScrollTopActiveChat,logout,list, clearAll,setStartActual,setEndActual, sendMessage, setScroll,scrollAfterAddMessage,startIndexMessagesLoaded,endIndexMessagesLoaded,
                         activeChat,setActiveChat,handleSearch }) => {
@@ -65,6 +77,9 @@ export const Profile = ({setShowGroupCreate,setShowGroupSettings,setScrollTopAct
                             setShowGroupSettings={setShowGroupSettings}
                             activeChat={activeChat}
                             sendMessage={sendMessage} />}
+                            {!activeChat && <div>   
+                        <StyledButton onClick={() =>{ debugger;setShowGroupCreate(true)}}>Create group</StyledButton></div>  }
+                        <CreateGroupContainer setShowGroupCreate={setShowGroupCreate} activeChat={activeChat} />
                     </Grid>
                 </Grid>
             </Container>

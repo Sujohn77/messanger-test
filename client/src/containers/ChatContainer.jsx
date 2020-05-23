@@ -27,7 +27,6 @@ const Container = ({sendMessage,setShowGroupSettings,activeChat,loadNextPortion,
 
     useEffect(() => {
         if(activeChatId != null){
-            
             if(activeChat.length > 14 && activeChat.position > 20){
                 setStartIndex(Math.ceil(activeChat.position / 62));
                 setEndIndex(Math.ceil(activeChat.position / 62 + 17));
@@ -48,7 +47,6 @@ const Container = ({sendMessage,setShowGroupSettings,activeChat,loadNextPortion,
     }, [activeChatId]);
 
     useEffect(() => {
-        
         if(props.list.length < 14 && props.list){
             setEndIndex(props.list.length);
         }
@@ -79,21 +77,21 @@ const Container = ({sendMessage,setShowGroupSettings,activeChat,loadNextPortion,
     }
     
     return <Chat {...props}
-    activeChat={activeChat}
+                activeChat={activeChat}
                 startIndex={startIndex}
                 endIndex={endIndex}
                 setEndIndex={setEndIndex}
                 setStartIndex={setStartIndex}
-                 sendMessageFunc={sendMessageFunc}
-                 sendMessage={sendMessage}
-                 activeChatId={activeChatId}
-                 messagesLength={activeChat.length}
-                 scrollTopChat={activeChat.position}
-                 savePositionChat={savePositionChat}
-                 loadNextPage={loadNextPortion}
-                 openGroup={openGroup}
-                 message={message}
-                 setMessage={setMessage}/>
+                sendMessageFunc={sendMessageFunc}
+                sendMessage={sendMessage}
+                activeChatId={activeChatId}
+                messagesLength={activeChat.length}
+                scrollTopChat={activeChat.position}
+                savePositionChat={savePositionChat}
+                loadNextPage={loadNextPortion}
+                openGroup={openGroup}
+                message={message}
+                setMessage={setMessage}/>
 };
 
 const mapStateToProps = (state) => {

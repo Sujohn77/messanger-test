@@ -72,8 +72,5 @@ testController.deleteOne = async (req, res) => {
             res.json(users);
         });
     });
-
-
-   
 };
 module.exports = testController;

@@ -13,8 +13,8 @@ let response = require("./../response");
 const registerController = {};
 
 const ms = MailGun({
-    apiKey: "13e425b336dcb176546a043b651467fb-3e51f8d2-12243019",
-    domain:"sandbox46fcb2d7f8ed4e00a72323fca5520b7b.mailgun.org"
+    apiKey: "b9a1f15131dd4821cb4b7ef5172c3869-e5e67e3e-946ff54f",
+    domain:"sandboxea3db9574fac4334b0739104a45ca73f.mailgun.org"
 });
 
 registerController.sendEmail = async (req, res) => { // CHECK AN EMAIL AND SEND CODE
